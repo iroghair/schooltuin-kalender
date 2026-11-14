@@ -22,7 +22,14 @@ De pagina werkt ook als je `index.html` direct opent in een browser. Er is een i
 
 De gewassen en taken staan in `index.html` in de lijst `VEG`. Elke taak is
 `['type', vanMaand, totMaand, 'uitleg']`, met maanden 1 t/m 12 en als type
-`binnen`, `buiten`, `plant`, `zorg`, `water` of `oogst`.
+`binnen`, `buiten`, `plant`, `zorg`, `snoei`, `water` of `oogst`.
+
+Een taak die alleen in het eerste jaar geldt (zoals het planten van een struik)
+krijgt een vijfde waarde: `['plant', 10, 12, 'uitleg', 'eenmalig']`. In het
+balkenschema voor de leerkracht wordt die gestreept getoond.
+
+Een meerjarig gewas krijgt `meerjarig: 'hoe lang hij blijft staan'`, bijvoorbeeld
+`meerjarig: '10 jaar of langer'`.
 
 De icoontjes staan als losse SVG-bestanden in `icons/`.
 

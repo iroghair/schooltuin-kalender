@@ -15,7 +15,7 @@
   --bg:#F2F5EF; --surface:#FFFFFF; --ink:#1C2A20; --muted:#5A6A5E; --line:#D6DFD3;
   --accent:#2D6A3E; --accent-ink:#FFFFFF;
   --band:#24492F; --band-ink:#EDF5EC; --band-muted:#B9D0BC;
-  --c-binnen:#D3A11F; --c-buiten:#4A974E; --c-plant:#8459AE; --c-water:#2F78C4; --c-zorg:#C44F9B; --c-oogst:#D0532C;
+  --c-binnen:#D3A11F; --c-buiten:#4A974E; --c-plant:#8459AE; --c-water:#2F78C4; --c-zorg:#C44F9B; --c-snoei:#16958C; --c-oogst:#D0532C;
   --f-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
   --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --nw:150px;
@@ -25,7 +25,7 @@
     --bg:#111914; --surface:#18221B; --ink:#E4EDE5; --muted:#9BAD9F; --line:#2B3A30;
     --accent:#7CC08B; --accent-ink:#0F1A12;
     --band:#173023; --band-ink:#E4EFE5; --band-muted:#9FBBA5;
-    --c-binnen:#E6B844; --c-buiten:#69B96D; --c-plant:#B48AD8; --c-water:#6CA8EC; --c-zorg:#E57CBF; --c-oogst:#EC744E;
+    --c-binnen:#E6B844; --c-buiten:#69B96D; --c-plant:#B48AD8; --c-water:#6CA8EC; --c-zorg:#E57CBF; --c-snoei:#4CC3B8; --c-oogst:#EC744E;
     color-scheme:dark;
   }
 }
@@ -33,7 +33,7 @@
   --bg:#111914; --surface:#18221B; --ink:#E4EDE5; --muted:#9BAD9F; --line:#2B3A30;
   --accent:#7CC08B; --accent-ink:#0F1A12;
   --band:#173023; --band-ink:#E4EFE5; --band-muted:#9FBBA5;
-  --c-binnen:#E6B844; --c-buiten:#69B96D; --c-plant:#B48AD8; --c-water:#6CA8EC; --c-zorg:#E57CBF; --c-oogst:#EC744E;
+  --c-binnen:#E6B844; --c-buiten:#69B96D; --c-plant:#B48AD8; --c-water:#6CA8EC; --c-zorg:#E57CBF; --c-snoei:#4CC3B8; --c-oogst:#EC744E;
   color-scheme:dark;
 }
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5}
@@ -116,6 +116,13 @@ h2{margin:0;font-weight:800;font-size:23px;line-height:1.2}
 .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .tab[aria-selected="true"] small{color:inherit;opacity:.85}
 .lai{width:22px;height:22px;flex:none}
+.bar.een{background:repeating-linear-gradient(135deg,var(--c) 0 3px,color-mix(in srgb,var(--c) 30%,var(--surface)) 3px 6px);box-shadow:inset 0 0 0 1.5px var(--c)}
+.sw.een{background:repeating-linear-gradient(135deg,var(--c) 0 3px,color-mix(in srgb,var(--c) 30%,var(--surface)) 3px 6px);box-shadow:inset 0 0 0 1.5px var(--c)}
+.mj{display:inline-flex;align-items:center;gap:3px;color:var(--c-buiten);font-weight:700;white-space:nowrap}
+.mji{width:16px;height:16px;flex:none}
+.aw{position:relative;display:block;min-width:0}
+.ci .aw{flex:none}
+.tag1{margin-left:8px;padding:1px 7px;border-radius:99px;border:1px dashed var(--muted);color:var(--muted);font-size:12px;font-weight:700;white-space:nowrap}
 
 /* Raster: één vakje per groente per maand */
 .raster .rname{flex-direction:row;align-items:center;gap:9px}
@@ -127,17 +134,18 @@ h2{margin:0;font-weight:800;font-size:23px;line-height:1.2}
 .cel .ai{display:block;width:100%;height:auto}
 .raster-kleuters{min-width:760px}
 .raster-kleuters .cel{display:grid;place-items:center;gap:2px}
-.raster-kleuters .cel.n1 .ai{width:78%}
+.raster-kleuters .cel .aw{width:100%}
+.raster-kleuters .cel.n1 .aw{width:78%}
 .raster-kleuters .cel.n2,.raster-kleuters .cel.n3,.raster-kleuters .cel.n4{grid-template-columns:1fr 1fr}
 .raster-midden{min-width:1000px}
 .raster-boven{min-width:1080px}
 .raster-midden .cel,.raster-boven .cel{display:flex;flex-direction:column;justify-content:center;gap:4px;padding:5px 3px;aspect-ratio:auto;min-height:72px}
 .ci{display:flex;align-items:center;gap:4px;min-width:0;font-size:11.5px;line-height:1.15;font-weight:700}
-.ci .ai{width:22px;flex:none}
+.ci .aw{width:22px}
 .raster-midden .cel.n1 .ci{flex-direction:column;text-align:center;gap:2px}
-.raster-midden .cel.n1 .ai{width:58%}
+.raster-midden .cel.n1 .aw{width:58%}
 .raster-boven .ci{font-weight:400;font-size:11px;align-items:flex-start}
-.raster-boven .ci .ai{width:16px}
+.raster-boven .ci .aw{width:16px}
 
 /* Month to-do */
 .mpills{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}
@@ -275,7 +283,7 @@ td .vn .ico{width:26px;height:26px}
     </div>
     <div class="tbl-scroll">
       <table>
-        <thead><tr><th>Groente</th><th>Soort</th><th>Zaai- of plantdiepte</th><th>Afstand</th><th>Water bij droogte</th><th>Tijd tot oogst</th></tr></thead>
+        <thead><tr><th>Groente</th><th>Soort</th><th>Zaai- of plantdiepte</th><th>Afstand</th><th>Water bij droogte</th><th>Tijd tot oogst</th><th>Blijft staan</th></tr></thead>
         <tbody id="tabel"></tbody>
       </table>
     </div>
@@ -293,6 +301,7 @@ const TYPES = {
   buiten: 'Buiten zaaien',
   plant:  'Uitplanten of poten',
   zorg:   'Verzorgen',
+  snoei:  'Snoeien',
   water:  'Water geven bij droogte',
   oogst:  'Oogsten'
 };
@@ -313,112 +322,125 @@ const ALGEMEEN = [
   'De tuin rust. Kijk samen terug: wat ging goed en wat doen we volgend jaar anders?'
 ];
 
-/* taken: [type, van maand, tot maand, uitleg] — maanden 1 t/m 12 */
+/* taken: [type, van maand, tot maand, uitleg] — maanden 1 t/m 12.
+   Een vijfde waarde 'eenmalig' betekent: alleen in het eerste jaar (planten van een meerjarig gewas).
+   meerjarig: hoe lang het gewas blijft staan. */
 const G = 'Groenten', F = 'Fruit';
 const VEG = [
-  {id:'pluksla', groep:G, naam:'Pluksla', soort:'Bladgroente', diepte:'0,5 cm', afstand:'rij 20 cm, dun zaaien', water:'2 tot 3 keer per week', oogst:'6 tot 8 weken', taken:[
+  {id:'pluksla', groep:G, naam:'Pluksla', soort:'Bladgroente', diepte:'0,5 cm', afstand:'20 cm tussen de rijen, dun zaaien', water:'2 tot 3 keer per week', oogst:'6 tot 8 weken', taken:[
     ['buiten',3,8,'Zaai direct op de plek, dun in een rij. Uitplanten is niet nodig.'],
     ['water',4,10,'Bij droogte 2 tot 3 keer per week.'],
     ['oogst',5,10,'Pluk steeds de buitenste blaadjes, dan groeit de plant door.']]},
-  {id:'rucola', groep:G, naam:'Rucola', soort:'Bladgroente', diepte:'1 cm', afstand:'rij 20 cm', water:'2 keer per week', oogst:'4 tot 6 weken', taken:[
+  {id:'rucola', groep:G, naam:'Rucola', soort:'Bladgroente', diepte:'1 cm', afstand:'20 cm tussen de rijen', water:'2 keer per week', oogst:'4 tot 6 weken', taken:[
     ['buiten',3,9,'Zaai direct op de plek, elke drie weken een nieuw rijtje.'],
     ['water',4,10,'Bij droogte 2 keer per week.'],
     ['oogst',4,11,'Pluk de jonge blaadjes. Oudere blaadjes worden scherp.']]},
-  {id:'spinazie', groep:G, naam:'Spinazie', soort:'Bladgroente', diepte:'2 cm', afstand:'rij 20 cm, in de rij 8 cm', water:'2 keer per week', oogst:'6 tot 8 weken', taken:[
+  {id:'spinazie', groep:G, naam:'Spinazie', soort:'Bladgroente', diepte:'2 cm', afstand:'20 cm tussen de rijen, 8 cm tussen de zaadjes', water:'2 keer per week', oogst:'6 tot 8 weken', taken:[
     ['buiten',2,5,'Zaai direct op de plek. In de warme zomer gaat spinazie snel bloeien.'],
     ['buiten',8,9,'Zaai opnieuw voor een oogst in de herfst.'],
     ['water',3,6,'Bij droogte 2 keer per week.'],
     ['water',8,10,'Bij droogte 2 keer per week.'],
     ['oogst',4,6,'Pluk de blaadjes voordat de plant gaat bloeien.'],
     ['oogst',9,10,'Herfstoogst: pluk steeds de grootste blaadjes.']]},
-  {id:'snijbiet', groep:G, naam:'Snijbiet', soort:'Bladgroente', diepte:'2 cm', afstand:'rij 40 cm, in de rij 20 cm', water:'1 tot 2 keer per week', oogst:'8 tot 10 weken', taken:[
+  {id:'snijbiet', groep:G, naam:'Snijbiet', soort:'Bladgroente', diepte:'2 cm', afstand:'40 cm tussen de rijen, 20 cm tussen de plantjes', water:'1 tot 2 keer per week', oogst:'8 tot 10 weken', taken:[
     ['buiten',4,7,'Zaai in rijen direct op de plek.'],
     ['zorg',5,8,'Dun uit tot 20 cm tussen de planten.'],
     ['water',5,10,'Bij droogte 1 tot 2 keer per week.'],
     ['oogst',6,11,'Snijd steeds de buitenste stelen af en laat het hart staan.']]},
-  {id:'andijvie', groep:G, naam:'Andijvie', soort:'Bladgroente', diepte:'0,5 cm', afstand:'30 × 30 cm', water:'2 keer per week', oogst:'10 tot 12 weken', taken:[
+  {id:'andijvie', groep:G, naam:'Andijvie', soort:'Bladgroente', diepte:'0,5 cm', afstand:'30 cm tussen de rijen, 30 cm tussen de planten', water:'2 keer per week', oogst:'10 tot 12 weken', taken:[
     ['buiten',5,7,'Zaai in potjes of in een zaaibedje.'],
     ['plant',6,8,'Plant uit na ongeveer 4 weken, 30 cm uit elkaar.'],
     ['water',6,10,'Bij droogte 2 keer per week.'],
     ['oogst',7,10,'Snijd de hele krop net boven de grond af.']]},
-  {id:'veldsla', groep:G, naam:'Veldsla', soort:'Bladgroente', diepte:'1 cm', afstand:'rij 10 cm', water:'1 keer per week', oogst:'8 tot 12 weken', taken:[
+  {id:'veldsla', groep:G, naam:'Veldsla', soort:'Bladgroente', diepte:'1 cm', afstand:'10 cm tussen de rijen', water:'1 keer per week', oogst:'8 tot 12 weken', taken:[
     ['buiten',8,9,'Zaai direct op de plek. Uitdunnen is niet nodig.'],
     ['water',8,10,'Bij droogte 1 keer per week. In de herfst is het vaak nat genoeg.'],
     ['oogst',10,12,'Snijd de rozetjes net boven de grond af.'],
     ['oogst',1,3,'Veldsla kan tegen vorst. Blijf oogsten tot het voorjaar.']]},
-  {id:'radijs', groep:G, naam:'Radijs', soort:'Knolgewas', diepte:'1 cm', afstand:'rij 15 cm, in de rij 3 cm', water:'om de dag', oogst:'ongeveer 4 weken', taken:[
+  {id:'radijs', groep:G, naam:'Radijs', soort:'Knolgewas', diepte:'1 cm', afstand:'15 cm tussen de rijen, 3 cm tussen de zaadjes', water:'om de dag', oogst:'ongeveer 4 weken', taken:[
     ['buiten',3,8,'Zaai elke twee weken een kort rijtje, dan kun je steeds oogsten.'],
     ['zorg',4,8,'Dun uit als ze te dicht op elkaar staan.'],
     ['water',3,9,'Om de dag water geven. Dan worden ze niet pittig.'],
     ['oogst',4,9,'Na ongeveer 4 weken, als ze zo dik zijn als een knikker.']]},
-  {id:'biet', groep:G, naam:'Rode biet', soort:'Knolgewas', diepte:'2 cm', afstand:'rij 25 cm, in de rij 10 cm', water:'1 tot 2 keer per week', oogst:'9 tot 13 weken', taken:[
+  {id:'biet', groep:G, naam:'Rode biet', soort:'Knolgewas', diepte:'2 cm', afstand:'25 cm tussen de rijen, 10 cm tussen de plantjes', water:'1 tot 2 keer per week', oogst:'9 tot 13 weken', taken:[
     ['buiten',4,6,'Leg de zaadjes los van elkaar. Uit elk zaadje komen meerdere plantjes.'],
     ['zorg',5,7,'Dun uit tot 10 cm. De uitgedunde blaadjes kun je eten.'],
     ['water',5,9,'Bij droogte 1 tot 2 keer per week.'],
     ['oogst',7,10,'Oogst als de bieten zo groot zijn als een tennisbal.']]},
-  {id:'wortel', groep:G, naam:'Wortels (bospeen)', soort:'Wortelgewas', diepte:'1 cm', afstand:'rij 20 cm, in de rij 3 tot 5 cm', water:'1 tot 2 keer per week', oogst:'10 tot 12 weken', taken:[
+  {id:'wortel', groep:G, naam:'Wortels (bospeen)', soort:'Wortelgewas', diepte:'1 cm', afstand:'20 cm tussen de rijen, 3 tot 5 cm tussen de plantjes', water:'1 tot 2 keer per week', oogst:'10 tot 12 weken', taken:[
     ['buiten',3,7,'Zaai heel dun in een ondiep geultje. Het kiemen duurt twee tot drie weken.'],
     ['zorg',4,8,'Dun uit tot 3 à 5 cm tussen de plantjes en wied tussen de rijen.'],
     ['water',4,9,'Bij droogte 1 tot 2 keer per week.'],
     ['oogst',6,10,'Trek de wortels uit als de bovenkant boven de grond komt.']]},
-  {id:'lenteui', groep:G, naam:'Lente-ui (bosui)', soort:'Bolgewas', diepte:'1 cm', afstand:'rij 20 cm', water:'1 tot 2 keer per week', oogst:'8 tot 10 weken', taken:[
+  {id:'lenteui', groep:G, naam:'Lente-ui (bosui)', soort:'Bolgewas', diepte:'1 cm', afstand:'20 cm tussen de rijen', water:'1 tot 2 keer per week', oogst:'8 tot 10 weken', taken:[
     ['buiten',3,7,'Zaai in rijen. Uitdunnen is niet nodig, ze groeien als bosje.'],
     ['water',4,9,'Bij droogte 1 tot 2 keer per week.'],
     ['oogst',5,9,'Trek ze uit als ze zo dik zijn als een potlood.']]},
-  {id:'aardappel', groep:G, naam:'Aardappelen', soort:'Knolgewas', diepte:'10 cm', afstand:'rij 60 cm, in de rij 35 cm', water:'1 keer per week flink', oogst:'13 tot 17 weken', taken:[
+  {id:'aardappel', groep:G, naam:'Aardappelen', soort:'Knolgewas', diepte:'10 cm', afstand:'60 cm tussen de rijen, 35 cm tussen de aardappels', water:'1 keer per week flink', oogst:'13 tot 17 weken', taken:[
     ['binnen',2,2,'Voorkiemen: leg de pootaardappels op een lichte, koele plek.'],
     ['plant',3,4,'Poot de aardappels 10 cm diep, met de kiemen naar boven.'],
     ['zorg',5,6,'Aanaarden: schep aarde tegen de plant als het loof 20 cm hoog is.'],
     ['water',5,8,'Bij droogte 1 keer per week flink water.'],
     ['oogst',6,9,'Vroege aardappels in juni, de rest als het loof afsterft.']]},
-  {id:'courgette', groep:G, naam:'Courgette', soort:'Vruchtgroente', diepte:'2 cm', afstand:'100 × 100 cm', water:'2 tot 3 keer per week flink', oogst:'7 tot 8 weken na uitplanten', taken:[
+  {id:'courgette', groep:G, naam:'Courgette', soort:'Vruchtgroente', diepte:'2 cm', afstand:'100 cm tussen de rijen, 100 cm tussen de planten', water:'2 tot 3 keer per week flink', oogst:'7 tot 8 weken na uitplanten', taken:[
     ['binnen',4,4,'Zaai één zaadje per pot op een warme vensterbank.'],
     ['plant',5,5,'Plant half mei buiten uit, na de Ĳsheiligen. Eén plant heeft een vierkante meter nodig.'],
     ['water',6,10,'2 tot 3 keer per week flink water, aan de voet van de plant.'],
     ['oogst',7,10,'Oogst als ze ongeveer 20 cm lang zijn. Wacht je te lang, dan worden ze enorm.']]},
-  {id:'sperzieboon', groep:G, naam:'Sperziebonen', soort:'Peulvrucht', diepte:'3 cm', afstand:'rij 40 cm, in de rij 8 cm', water:'2 keer per week, vooral bij bloei', oogst:'9 tot 10 weken', taken:[
+  {id:'sperzieboon', groep:G, naam:'Sperziebonen', soort:'Peulvrucht', diepte:'3 cm', afstand:'40 cm tussen de rijen, 8 cm tussen de zaadjes', water:'2 keer per week, vooral bij bloei', oogst:'9 tot 10 weken', taken:[
     ['buiten',5,7,'Zaai van half mei tot half juli. Bonen kunnen niet tegen kou.'],
     ['water',6,9,'Bij droogte 2 keer per week, vooral als ze bloeien.'],
     ['oogst',7,9,'Pluk vaak, dan blijft de plant nieuwe bonen maken.']]},
-  {id:'peultjes', groep:G, naam:'Peultjes / sugarsnaps', soort:'Peulvrucht', diepte:'4 cm', afstand:'rij 40 cm, in de rij 5 cm', water:'1 tot 2 keer per week', oogst:'10 tot 12 weken', taken:[
+  {id:'peultjes', groep:G, naam:'Peultjes / sugarsnaps', soort:'Peulvrucht', diepte:'4 cm', afstand:'40 cm tussen de rijen, 5 cm tussen de zaadjes', water:'1 tot 2 keer per week', oogst:'10 tot 12 weken', taken:[
     ['buiten',2,4,'Zaai direct op de plek in een dubbele rij.'],
     ['zorg',3,5,'Zet een klimhulp neer, zoals gaas of takken.'],
     ['water',4,7,'Bij droogte 1 tot 2 keer per week.'],
     ['oogst',5,7,'Pluk de peulen jong en plat (peultjes) of bol en sappig (sugarsnaps).']]},
-  {id:'cherrytomaat', groep:G, naam:'Cherrytomaten', soort:'Vruchtgroente', diepte:'0,5 cm', afstand:'rij 60 cm, in de rij 50 cm', water:'3 tot 4 keer per week, op de voet', oogst:'10 tot 12 weken na uitplanten', taken:[
+  {id:'cherrytomaat', groep:G, naam:'Cherrytomaten', soort:'Vruchtgroente', diepte:'0,5 cm', afstand:'60 cm tussen de rijen, 50 cm tussen de planten', water:'3 tot 4 keer per week, op de voet', oogst:'10 tot 12 weken na uitplanten', taken:[
     ['binnen',3,3,'Zaai binnen in een bakje op een warme, lichte vensterbank.'],
     ['zorg',4,4,'Pot de plantjes over in een grotere pot.'],
     ['plant',5,5,'Zet ze half mei buiten in een grote pot of in de grond, op een zonnige plek.'],
     ['zorg',6,8,'Bind de plant vast aan een stok en knip de zijscheuten (dieven) weg.'],
     ['water',5,9,'3 tot 4 keer per week, op de voet en niet over de bladeren.'],
     ['oogst',7,9,'Pluk de tomaatjes als ze helemaal rood zijn.']]},
-  {id:'aardbei', groep:F, naam:'Aardbeien', soort:'Vaste plant', diepte:'hart gelijk met de grond', afstand:'rij 50 cm, in de rij 30 cm', water:'2 tot 3 keer per week', oogst:'het jaar na planten', taken:[
-    ['plant',3,4,'Plant de aardbeiplantjes met het hart precies op de grond.'],
-    ['plant',8,8,'Ook in augustus kun je nieuwe plantjes zetten.'],
+  {id:'aardbei', groep:F, naam:'Aardbeien', soort:'Vaste plant', diepte:'hart gelijk met de grond', afstand:'50 cm tussen de rijen, 30 cm tussen de planten', water:'2 tot 3 keer per week', oogst:'het jaar na planten', meerjarig:'3 à 4 jaar', taken:[
+    ['plant',3,4,'Plant de aardbeiplantjes met het hart precies op de grond.','eenmalig'],
+    ['plant',8,8,'Ook in augustus kun je nieuwe plantjes zetten.','eenmalig'],
+    ['zorg',5,5,'Leg stro onder de planten, dan blijven de aardbeien schoon en droog.'],
     ['zorg',8,8,'Verplant de uitlopers (de jonge plantjes aan de ranken) naar een nieuwe plek.'],
+    ['snoei',8,8,'Knip na de oogst de oude bladeren af. Laat het hartje staan.'],
     ['water',4,9,'Bij droogte 2 tot 3 keer per week.'],
     ['oogst',6,7,'Pluk de aardbeien als ze helemaal rood zijn.'],
     ['oogst',8,10,'Doordragende rassen geven nog vruchten tot oktober.']]},
-  {id:'framboos', groep:F, naam:'Frambozen', soort:'Struik', diepte:'even diep als in de pot', afstand:'rij 150 cm, in de rij 40 cm', water:'1 tot 2 keer per week', oogst:'vanaf de zomer na planten', taken:[
-    ['plant',10,12,'Plant de struik op een vaste plek.'],
-    ['plant',1,3,'Plant de struik op een vaste plek, als het niet vriest.'],
+  {id:'framboos', groep:F, naam:'Frambozen', soort:'Struik', diepte:'even diep als in de pot', afstand:'150 cm tussen de rijen, 40 cm tussen de struiken', water:'1 tot 2 keer per week', oogst:'vanaf de zomer na planten', meerjarig:'10 jaar of langer', taken:[
+    ['plant',10,12,'Plant de struik op een vaste plek.','eenmalig'],
+    ['plant',1,3,'Plant de struik op een vaste plek, als het niet vriest.','eenmalig'],
+    ['snoei',2,2,'Herfstframbozen: knip alle takken vlak boven de grond af.'],
+    ['zorg',4,4,'Strooi compost rond de struiken.'],
     ['water',5,9,'Bij droogte 1 tot 2 keer per week.'],
     ['oogst',6,8,'Zomerframbozen: pluk als ze makkelijk loslaten.'],
+    ['snoei',8,9,'Zomerframbozen: knip na de oogst de takken die vruchten hadden bij de grond af.'],
     ['oogst',9,10,'Herfstframbozen geven vruchten tot oktober.']]},
-  {id:'rodebes', groep:F, naam:'Rode bessen', soort:'Struik', diepte:'even diep als in de pot', afstand:'125 cm tussen de struiken', water:'1 keer per week bij langere droogte', oogst:'vanaf het tweede jaar', taken:[
-    ['plant',10,12,'Plant de struik op een vaste plek.'],
-    ['plant',1,3,'Plant de struik op een vaste plek, als het niet vriest.'],
+  {id:'rodebes', groep:F, naam:'Rode bessen', soort:'Struik', diepte:'even diep als in de pot', afstand:'125 cm tussen de struiken', water:'1 keer per week bij langere droogte', oogst:'vanaf het tweede jaar', meerjarig:'15 jaar of langer', taken:[
+    ['plant',10,12,'Plant de struik op een vaste plek.','eenmalig'],
+    ['plant',1,3,'Plant de struik op een vaste plek, als het niet vriest.','eenmalig'],
+    ['snoei',1,2,'Snoei in de winter: knip oude en kruisende takken weg, dan komt er licht in de struik.'],
+    ['snoei',12,12,'Snoei in de winter: knip oude en kruisende takken weg, dan komt er licht in de struik.'],
+    ['zorg',4,4,'Strooi compost rond de struik.'],
     ['water',5,7,'Bij langere droogte 1 keer per week.'],
     ['oogst',6,7,'Pluk hele trosjes als alle bessen rood zijn.']]},
-  {id:'braam', groep:F, naam:'Braam (doornloos)', soort:'Struik', diepte:'even diep als in de pot', afstand:'250 cm tussen de struiken', water:'1 tot 2 keer per week', oogst:'vanaf het tweede jaar', taken:[
-    ['plant',10,12,'Plant de struik op een vaste plek, bij een hek of draad.'],
-    ['plant',1,3,'Plant de struik op een vaste plek, als het niet vriest.'],
+  {id:'braam', groep:F, naam:'Braam (doornloos)', soort:'Struik', diepte:'even diep als in de pot', afstand:'250 cm tussen de struiken', water:'1 tot 2 keer per week', oogst:'vanaf het tweede jaar', meerjarig:'10 jaar of langer', taken:[
+    ['plant',10,12,'Plant de struik op een vaste plek, bij een hek of draad.','eenmalig'],
+    ['plant',1,3,'Plant de struik op een vaste plek, als het niet vriest.','eenmalig'],
     ['zorg',5,7,'Bind de nieuwe lange takken vast aan het draad.'],
     ['water',6,9,'Bij droogte 1 tot 2 keer per week.'],
-    ['oogst',8,9,'Pluk de bramen als ze zwart en zacht zijn.']]},
-  {id:'blauwebes', groep:F, naam:'Blauwe bes', soort:'Struik', diepte:'even diep als in de pot', afstand:'120 cm tussen de struiken', water:'2 keer per week (houdt van vocht)', oogst:'vanaf het tweede jaar', taken:[
-    ['plant',10,12,'Plant de struik in zure grond, bijvoorbeeld met rododendronaarde.'],
-    ['plant',1,3,'Plant de struik in zure grond, als het niet vriest.'],
+    ['oogst',8,9,'Pluk de bramen als ze zwart en zacht zijn.'],
+    ['snoei',10,10,'Knip na de oogst de takken die vruchten hadden bij de grond af.']]},
+  {id:'blauwebes', groep:F, naam:'Blauwe bes', soort:'Struik', diepte:'even diep als in de pot', afstand:'120 cm tussen de struiken', water:'2 keer per week (houdt van vocht)', oogst:'vanaf het tweede jaar', meerjarig:'20 jaar of langer', taken:[
+    ['plant',10,12,'Plant de struik in zure grond, bijvoorbeeld met rododendronaarde.','eenmalig'],
+    ['plant',1,3,'Plant de struik in zure grond, als het niet vriest.','eenmalig'],
+    ['snoei',2,3,'Snoei licht: haal oude, grijze takken weg.'],
+    ['zorg',4,4,'Strooi wat rododendronaarde of naaldenstrooisel rond de struik.'],
     ['water',4,9,'Bij droogte 2 keer per week. Blauwe bes houdt van vocht.'],
     ['oogst',7,8,'Pluk de bessen als ze helemaal blauw zijn.']]}
 ];
@@ -477,6 +499,7 @@ const ACTIE = {
   binnen: `<path d="M7 14v13.5h18V14" fill="#fbeec4" stroke="#D3A11F" stroke-width="2.2" stroke-linejoin="round"/><path d="M3.5 15.5L16 5l12.5 10.5" stroke="#D3A11F" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 21.5v-4" stroke="#4a974e" stroke-width="1.4" stroke-linecap="round"/><path d="M16 18.5c-1-2-3-2.6-4.6-2.1.5 1.8 2.6 2.6 4.6 2.1zM16 18c1-2 3-2.6 4.6-2.1-.5 1.8-2.6 2.6-4.6 2.1z" fill="#5fa33f"/><path d="M11.8 21h8.4l-1.3 6.5h-5.8z" fill="#c8693c"/>`,
   buiten: `<path d="M2.5 28c4-5.5 23-5.5 27 0z" fill="#8d6140"/><g transform="rotate(-35 10 10)"><rect x="5" y="2.5" width="10" height="13.5" rx="1.6" fill="#4A974E"/><rect x="7" y="6" width="6" height="5" rx="1" fill="#e4f2df"/><path d="M5 16h10" stroke="#2f6b33" stroke-width="1.2"/></g><g fill="#6b4a2b"><ellipse cx="17" cy="15.5" rx="1.1" ry=".75"/><ellipse cx="20.5" cy="18.5" rx="1.1" ry=".75"/><ellipse cx="17.5" cy="21" rx="1.1" ry=".75"/><ellipse cx="22.5" cy="22.5" rx="1.1" ry=".75"/></g>`,
   plant: `<path d="M2.5 28.5c4-5.5 23-5.5 27 0z" fill="#8d6140"/><path d="M11 25.5v-8" stroke="#4a974e" stroke-width="1.7" stroke-linecap="round"/><path d="M11 19.5c-2-4-6-4.4-8-3.4 1 3 5 4.4 8 3.4zM11 18.5c2-4.2 6-5 8-4-1 3.2-5 5-8 4z" fill="#5fa33f"/><g transform="rotate(28 24 15)"><rect x="22.7" y="2.5" width="2.6" height="8.5" rx="1.3" fill="#8459AE"/><path d="M20.8 11h6.4v6c0 3.4-6.4 3.4-6.4 0z" fill="#aab0b8"/></g>`,
+  snoei: `<g transform="rotate(32 16 16)"><path d="M15.2 17C13 12 12.4 7 13.6 2.5c2.6 3.2 3.2 9.4 2.6 14.5z" fill="#b9bfc7"/><path d="M16.8 17c2.2-5 2.8-10 1.6-14.5-2.6 3.2-3.2 9.4-2.6 14.5z" fill="#8e959e"/><path d="M15.4 18.2c-.8 3.2-2.6 5.4-5 6.2a3.4 3.4 0 1 0 4 3.6c.5-2.6 1.6-5.6 2.4-8.6z" fill="#16958C"/><path d="M16.6 18.2c.8 3.2 2.6 5.4 5 6.2a3.4 3.4 0 1 1-4 3.6c-.5-2.6-1.6-5.6-2.4-8.6z" fill="#16958C"/><circle cx="16" cy="17.4" r="1.4" fill="#5c636b"/></g><path d="M25 25c1.6-2.8 4-3.2 5.4-2.6-.7 2.4-3.2 3.4-5.4 2.6z" fill="#5fa33f"/>`,
   zorg: `<path d="M16 3v18" stroke="#C44F9B" stroke-width="2.4" stroke-linecap="round"/><path d="M6.5 21.5h19" stroke="#6f7680" stroke-width="2.6" stroke-linecap="round"/><path d="M7.5 22v5.5M11.7 22v5.5M16 22v5.5M20.3 22v5.5M24.5 22v5.5" stroke="#6f7680" stroke-width="1.7" stroke-linecap="round"/><path d="M26 11c-1.5-3-4-3.5-5.5-3 .3 2 2.5 3.4 5.5 3z" fill="#5fa33f"/>`,
   water: `<path d="M9.5 13c0-6 9-6 9 0" stroke="#2F78C4" stroke-width="2.2" fill="none"/><path d="M19.5 22.5l7-8.5" stroke="#2F78C4" stroke-width="2.6" stroke-linecap="round"/><ellipse cx="27.4" cy="13" rx="1.7" ry="2.6" transform="rotate(40 27.4 13)" fill="#2F78C4"/><path d="M6.5 13h14v12.5a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2z" fill="#2F78C4"/><rect x="8.6" y="15.5" width="2.6" height="8" rx="1.3" fill="#fff" opacity=".35"/><g fill="#6ca8ec"><path d="M28.8 18c1 1.6 1.6 2.4 1.6 3.2a1.6 1.6 0 0 1-3.2 0c0-.8.6-1.6 1.6-3.2zM25.4 22.6c.9 1.4 1.4 2.1 1.4 2.8a1.4 1.4 0 0 1-2.8 0c0-.7.5-1.4 1.4-2.8z"/></g>`,
   oogst: `<path d="M8 16.5c0-10.5 16-10.5 16 0" stroke="#9a4a22" stroke-width="2" fill="none"/><path d="M22 15.5l5.5-8.5" stroke="#f28c28" stroke-width="3.4" stroke-linecap="round"/><path d="M27.5 7l1.8-2.6M27.5 7l2.6-.8" stroke="#5aa23b" stroke-width="1.3" stroke-linecap="round"/><circle cx="18.5" cy="13.5" r="4.4" fill="#7cbf3d"/><circle cx="11.5" cy="14" r="4" fill="#e8402f"/><path d="M3.5 16h25l-3 10.8a2 2 0 0 1-2 1.5H8.5a2 2 0 0 1-2-1.5z" fill="#d0682f"/><path d="M5.5 20.5h21M6.6 24.5h18.8" stroke="#9a4a22" stroke-width="1.1"/>`
@@ -494,15 +517,20 @@ const WEERGAVEN = {
   boven: {naam:'Bovenbouw', sub:'groep 6, 7 en 8', pdf:'bovenbouw (groep 6, 7 en 8)',
     hint:'Elk vakje is een maand. Klik op een vakje om te lezen wat je in die maand precies doet.'}
 };
-const WOORD = {binnen:'binnen zaaien', buiten:'zaaien', plant:'planten', zorg:'zorgen', water:'water geven', oogst:'oogsten'};
+const WOORD = {binnen:'binnen zaaien', buiten:'zaaien', plant:'planten', zorg:'zorgen', snoei:'snoeien', water:'water geven', oogst:'oogsten'};
 const KEY_W = 'schooltuinkalender.weergave.v1';
 let weergave = (() => { try{ const v = localStorage.getItem(KEY_W); if (WEERGAVEN[v]) return v; }catch(e){} return 'leerkracht'; })();
+const isEen = t => t[4] === 'eenmalig';
+const heeftEen = lijst => lijst.some(g => g.taken.some(isEen));
+/* Icoon voor meerjarig: een plantje in een rondgaande pijl */
+const MJ = `<path d="M26 11A11 11 0 1 0 27 20" stroke="#4A974E" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M22.5 10.5l4.2.9.7-4.3" stroke="#4A974E" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 23v-7" stroke="#4A974E" stroke-width="1.8" stroke-linecap="round"/><path d="M16 17.5c-1.5-3-4.5-3.5-6-2.8.7 2.4 3.6 3.5 6 2.8zM16 16.5c1.5-3 4.5-3.8 6-3-.7 2.5-3.6 3.8-6 3z" fill="#5fa33f"/>`;
+const mjIcoon = (cls = 'mji') => `<svg class="${cls}" viewBox="0 0 32 32" aria-hidden="true" focusable="false">${MJ}</svg>`;
 /* Welke soorten taken een gewas in maand m (1-12) heeft, in vaste volgorde */
 const soortenIn = (g, m) => ORDER.filter(t => g.taken.some(([ty,a,b]) => ty === t && m >= a && m <= b));
 
 const ICON_PNG = {};
 function iconPngs(){
-  const bronnen = {...ICON}; ORDER.forEach(t => bronnen['a-' + t] = ACTIE[t]);
+  const bronnen = {...ICON, mj: MJ}; ORDER.forEach(t => bronnen['a-' + t] = ACTIE[t]);
   return Promise.all(Object.keys(bronnen).map(id => new Promise(res => {
     if (ICON_PNG[id]) return res();
     const img = new Image();
@@ -517,9 +545,13 @@ const pdfActie = (doc, t, x, y, s) => pdfIcoon(doc, 'a-' + t, x, y, s);
 
 /* Static parts */
 function tekenLegenda(){
-  $('legenda').innerHTML = ORDER.map(t => weergave === 'leerkracht'
+  const lijst = gekozen(), t1 = new Set(lijst.flatMap(g => g.taken.map(x => x[0])));
+  let html = ORDER.filter(t => t !== 'snoei' || t1.has('snoei')).map(t => weergave === 'leerkracht'
     ? `<li><span class="sw" style="--c:var(--c-${t})"></span>${TYPES[t]}</li>`
     : `<li>${actie(t, 'lai')}${weergave === 'midden' ? WOORD[t] : TYPES[t]}</li>`).join('');
+  if (weergave === 'leerkracht' && heeftEen(lijst)) html += `<li><span class="sw een" style="--c:var(--muted)"></span>alleen het eerste jaar</li>`;
+  if (lijst.some(g => g.meerjarig)) html += `<li>${mjIcoon('lai')}meerjarig, blijft staan</li>`;
+  $('legenda').innerHTML = html;
 }
 function tekenTabs(){
   $('tabs').innerHTML = Object.entries(WEERGAVEN).map(([k, w]) =>
@@ -531,7 +563,7 @@ function kiesWeergave(w, focus){
   $('hint').textContent = WEERGAVEN[w].hint;
   if (focus) $('tab-' + w).focus();
 }
-$('chips').innerHTML = ['Groenten','Fruit'].map(gr => `<div class="chipset"><h3>${gr}</h3><div class="chips">${VEG.filter(g => g.groep === gr).map(g =>
+$('chips').innerHTML = ['Groenten','Fruit'].map(gr => `<div class="chipset"><h3>${gr === F ? 'Fruit (meerjarig)' : gr}</h3><div class="chips">${VEG.filter(g => g.groep === gr).map(g =>
   `<button type="button" class="chip" id="chip-${g.id}" data-id="${g.id}" aria-pressed="false">${icoon(g.id)}${g.naam}</button>`).join('')}</div></div>`).join('');
 $('mpills').innerHTML = KORT.map((k,i) => `<button type="button" class="mpill${i===NU?' is-now':''}" id="mpill-${i}" data-m="${i}" aria-pressed="false" aria-label="${MAANDEN[i]}${i===NU?' (deze maand)':''}">${k}</button>`).join('');
 
@@ -550,21 +582,23 @@ function tekenKalender(){
   const laag = `<div class="ov" aria-hidden="true"><div class="vak"></div><div class="col" id="selcol" style="--m:${maand}"></div><div class="ijs"></div></div>`;
   const rijen = lijst.length ? lijst.map(g => {
     const banen = ORDER.filter(t => g.taken.some(x => x[0] === t)).map(t =>
-      `<div class="lane">${g.taken.filter(x => x[0] === t).map(([ty,a,b]) =>
-        `<span class="bar" style="grid-column:${a} / ${b+1};--c:var(--c-${ty})" title="${TYPES[ty]}: ${periode(a,b)}"></span>`).join('')}</div>`).join('');
-    return `<div class="row"><div class="rname">${icoon(g.id)}<div class="rtxt"><strong>${g.naam}</strong><span>${g.soort}</span></div></div><div class="rlanes">${banen}</div></div>`;
+      `<div class="lane">${g.taken.filter(x => x[0] === t).map(x => { const [ty,a,b] = x;
+        return `<span class="bar${isEen(x) ? ' een' : ''}" style="grid-column:${a} / ${b+1};--c:var(--c-${ty})" title="${TYPES[ty]}: ${periode(a,b)}${isEen(x) ? ' (alleen het eerste jaar)' : ''}"></span>`; }).join('')}</div>`).join('');
+    return `<div class="row"><div class="rname">${icoon(g.id)}<div class="rtxt"><strong>${g.naam}</strong><span>${g.soort}${mjLabel(g)}</span></div></div><div class="rlanes">${banen}</div></div>`;
   }).join('') : `<div class="row empty">Kies hieronder een of meer groenten om ze in de kalender te zien.</div>`;
   const voet = `<div class="mfoot"><div></div><div class="labs"><span class="lab lab-ijs">Ĳsheiligen 11–15 mei</span><span class="lab lab-vak">zomervakantie</span></div></div>`;
   $('chart').innerHTML = laag + kop + rijen + voet;
 }
 
+const mjLabel = g => g.meerjarig ? ` <span class="mj" title="Meerjarig: blijft ${g.meerjarig} staan">${mjIcoon()}meerjarig</span>` : '';
 function tekenRaster(){
   const lijst = gekozen();
   const kop = `<div class="mhead"><div class="corner">Groente</div><div class="months">${KORT.map((k,i) =>
     `<button type="button" class="mbtn" id="mbtn-${i}" data-m="${i}" aria-pressed="${i===maand}" aria-label="${MAANDEN[i]}"><span>${k}</span><span class="now">${i===NU?'nu':''}</span></button>`).join('')}</div></div>`;
-  const inhoud = t => weergave === 'kleuters' ? actie(t)
-    : `<span class="ci">${actie(t)}<span>${weergave === 'midden' ? WOORD[t] : TYPES[t]}</span></span>`;
-  const rijen = lijst.length ? lijst.map(g => `<div class="row"><div class="rname">${icoon(g.id)}<div class="rtxt"><strong>${g.naam}</strong>${weergave === 'kleuters' ? '' : `<span>${g.soort}</span>`}</div></div><div class="cellen">${
+  const ico = t => `<span class="aw">${actie(t)}</span>`;
+  const inhoud = t => weergave === 'kleuters' ? ico(t)
+    : `<span class="ci">${ico(t)}<span>${weergave === 'midden' ? WOORD[t] : TYPES[t]}</span></span>`;
+  const rijen = lijst.length ? lijst.map(g => `<div class="row"><div class="rname">${icoon(g.id)}<div class="rtxt"><strong>${g.naam}${weergave === 'kleuters' && g.meerjarig ? ` <span class="mj" title="Meerjarig: blijft ${g.meerjarig} staan">${mjIcoon()}</span>` : ''}</strong>${weergave === 'kleuters' ? '' : `<span>${g.soort}${mjLabel(g)}</span>`}</div></div><div class="cellen">${
     KORT.map((_, i) => { const ts = soortenIn(g, i+1);
       return `<div class="cel n${Math.min(ts.length, 4)}${i === maand ? ' sel' : ''}" data-m="${i}" role="img" aria-label="${g.naam}, ${MAANDEN[i]}: ${ts.length ? ts.map(t => TYPES[t].toLowerCase()).join(', ') : 'niets te doen'}">${ts.map(inhoud).join('')}</div>`; }).join('')
   }</div></div>`).join('') : `<div class="row empty">Kies hieronder een of meer groenten om ze in de kalender te zien.</div>`;
@@ -580,13 +614,13 @@ function tekenMaand(){
 
   const m = maand + 1;
   const groepen = {};
-  gekozen().forEach(g => g.taken.forEach(([t,a,b,uitleg]) => {
-    if (m >= a && m <= b) (groepen[t] ||= []).push({naam:g.naam, id:g.id, uitleg});
+  gekozen().forEach(g => g.taken.forEach(x => { const [t,a,b,uitleg] = x;
+    if (m >= a && m <= b) (groepen[t] ||= []).push({naam:g.naam, id:g.id, uitleg, een:isEen(x)});
   }));
   let html = ORDER.filter(t => groepen[t]).map(t => `
     <div class="group" style="--c:var(--c-${t})">
       <h3>${actie(t, 'hai')}${TYPES[t]} <small>${groepen[t].length}</small></h3>
-      <ul>${groepen[t].map(i => `<li><b class="vn">${icoon(i.id)}${i.naam}</b><span>${i.uitleg}</span></li>`).join('')}</ul>
+      <ul>${groepen[t].map(i => `<li><b class="vn">${icoon(i.id)}${i.naam}${i.een ? '<span class="tag1">alleen het eerste jaar</span>' : ''}</b><span>${i.uitleg}</span></li>`).join('')}</ul>
     </div>`).join('');
   if (!html){
     html = `<div class="group leeg"><p>${keuze.size
@@ -600,8 +634,8 @@ function tekenMaand(){
 function tekenTabel(){
   const lijst = gekozen();
   $('tabel').innerHTML = lijst.length
-    ? lijst.map(g => `<tr><td><span class="vn">${icoon(g.id)}${g.naam}</span></td><td>${g.soort}</td><td>${g.diepte}</td><td>${g.afstand}</td><td>${g.water}</td><td>${g.oogst}</td></tr>`).join('')
-    : `<tr><td colspan="6" style="font-weight:400;color:var(--muted)">Nog geen groenten gekozen.</td></tr>`;
+    ? lijst.map(g => `<tr><td><span class="vn">${icoon(g.id)}${g.naam}</span></td><td>${g.soort}</td><td>${g.diepte}</td><td>${g.afstand}</td><td>${g.water}</td><td>${g.oogst}</td><td>${g.meerjarig ? `<span class="vn">${mjIcoon()}${g.meerjarig}</span>` : 'één seizoen'}</td></tr>`).join('')
+    : `<tr><td colspan="7" style="font-weight:400;color:var(--muted)">Nog geen groenten gekozen.</td></tr>`;
 }
 
 function tekenPlan(){
@@ -610,17 +644,17 @@ function tekenPlan(){
     const m = mi+1;
     const blokken = soorten.map(t => {
       const items = [];
-      VEG.forEach(g => g.taken.forEach(([ty,a,b,u]) => { if (ty===t && m>=a && m<=b) items.push({g,u}); }));
+      VEG.forEach(g => g.taken.forEach(x => { const [ty,a,b,u] = x; if (ty===t && m>=a && m<=b) items.push({g,u,een:isEen(x)}); }));
       if (!items.length) return '';
-      return `<h4 style="--c:var(--c-${t})">${actie(t, 'hai')}${TYPES[t]}</h4><ul>${items.map(({g,u}) =>
-        `<li><b class="vn">${icoon(g.id)}${g.naam}${keuze.has(g.id)?'<span class="badge">gekozen</span>':''}</b><span>${u}</span></li>`).join('')}</ul>`;
+      return `<h4 style="--c:var(--c-${t})">${actie(t, 'hai')}${TYPES[t]}</h4><ul>${items.map(({g,u,een}) =>
+        `<li><b class="vn">${icoon(g.id)}${g.naam}${een?'<span class="tag1">alleen het eerste jaar</span>':''}${keuze.has(g.id)?'<span class="badge">gekozen</span>':''}</b><span>${u}</span></li>`).join('')}</ul>`;
     }).join('');
     return `<div class="plancard"><p class="wanneer">${k ? 'Volgende maand' : 'Deze maand'}</p><h3>${MAANDEN[mi].charAt(0).toUpperCase()+MAANDEN[mi].slice(1)}</h3>${
       blokken || '<p class="leeg">Er valt deze maand niets te zaaien of te planten. Gebruik de tijd om de bedden voor te bereiden.</p>'}</div>`;
   }).join('');
 }
 
-function keuzeVeranderd(){ bewaar(); tekenPlan(); tekenKeuze(); tekenKalender(); tekenMaand(); tekenTabel(); }
+function keuzeVeranderd(){ bewaar(); tekenLegenda(); tekenPlan(); tekenKeuze(); tekenKalender(); tekenMaand(); tekenTabel(); }
 function kiesMaand(m){ maand = m; tekenMaand(); }
 
 $('chips').addEventListener('click', e => {
@@ -1004,8 +1038,19 @@ function kleurplaatPng(id){
 }
 
 /* ---------- PDF ---------- */
-const PC = {binnen:[211,161,31], buiten:[74,151,78], plant:[132,89,174], zorg:[196,79,155], water:[47,120,196], oogst:[208,83,44]};
+const PC = {binnen:[211,161,31], buiten:[74,151,78], plant:[132,89,174], zorg:[196,79,155], snoei:[22,149,140], water:[47,120,196], oogst:[208,83,44]};
 const INK=[28,42,32], MUT=[95,110,99], LIN=[214,223,211];
+/* Licht getinte kleur (mengsel met wit) */
+const tint = (c, f = .32) => c.map(v => Math.round(255 - (255 - v)*f));
+/* Balk die alleen in het eerste jaar geldt: gestreept met een rand */
+function pdfBalkEen(doc, c, x, y, w, h){
+  doc.setFillColor(...tint(c)); doc.roundedRect(x, y, w, h, h/2, h/2, 'F');
+  doc.setDrawColor(...c); doc.setLineWidth(.25);
+  for (let sx = x + 1.2; sx < x + w - .6; sx += 1.5) doc.line(sx, y + h - .3, Math.min(sx + h*.8, x + w - .4), y + .3);
+  doc.roundedRect(x, y, w, h, h/2, h/2, 'S');
+}
+const soortTekst = g => `${g.groep} - ${g.soort}` + (g.meerjarig ? ` - meerjarig` : '');
+const typenIn = lijst => ORDER.filter(t => lijst.some(g => g.taken.some(x => x[0] === t)) || t !== 'snoei');
 const tx = s => String(s).replace(/Ĳ/g,'IJ').replace(/ĳ/g,'ij').replace(/[–—]/g,'-').replace(/[‘’]/g,"'").replace(/[“”]/g,'"');
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -1024,7 +1069,9 @@ function overzicht(doc, lijst){
     doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...MUT);
     doc.text(tx(`${lijst.length} gewassen gekozen. Gemaakt op ${new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'})}.`), L, 25);
     let lx=L; doc.setFontSize(8.5);
-    ORDER.forEach(t => { doc.setFillColor(...PC[t]); doc.roundedRect(lx, 29.3, 7, 2.6, 1.3, 1.3, 'F'); doc.setTextColor(...INK); doc.text(TYPES[t], lx+9, 31.4); lx += 13 + doc.getTextWidth(TYPES[t]); });
+    typenIn(lijst).forEach(t => { doc.setFillColor(...PC[t]); doc.roundedRect(lx, 29.3, 7, 2.6, 1.3, 1.3, 'F'); doc.setTextColor(...INK); doc.text(TYPES[t], lx+9, 31.4); lx += 12 + doc.getTextWidth(TYPES[t]); });
+    if (heeftEen(lijst)){ pdfBalkEen(doc, MUT, lx, 29.3, 7, 2.6); doc.setTextColor(...INK); doc.text('alleen het eerste jaar', lx+9, 31.4); lx += 12 + doc.getTextWidth('alleen het eerste jaar'); }
+    if (lijst.some(g => g.meerjarig)){ pdfIcoon(doc, 'mj', lx, 28.2, 4.4); doc.text('meerjarig', lx+5.6, 31.4); }
     const yEnd = TOP + 8 + rs.reduce((a,r)=>a+r.h,0);
     doc.setFillColor(236,239,234); doc.rect(X0 + 6.55*CW, TOP, 1.45*CW, yEnd-TOP, 'F');
     doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(...INK);
@@ -1038,11 +1085,13 @@ function overzicht(doc, lijst){
       pdfIcoon(doc, r.g.id, L, ry + r.h/2 - 3.5, 7);
       doc.text(tx(r.g.naam), L+9, ry + r.h/2 - 0.6);
       doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(...MUT);
-      doc.text(r.g.soort, L+9, ry + r.h/2 + 3);
+      doc.text(r.g.soort + (r.g.meerjarig ? ' - meerjarig' : ''), L+9, ry + r.h/2 + 3);
       const lh = 2.4, totaal = r.banen.length*3.3 - 0.9; let by = ry + (r.h - totaal)/2;
       r.banen.forEach(t => {
         doc.setFillColor(...PC[t]);
-        r.g.taken.filter(x => x[0]===t).forEach(([,a,b]) => doc.roundedRect(X0+(a-1)*CW+0.8, by, (b-a+1)*CW-1.6, lh, 1.2, 1.2, 'F'));
+        r.g.taken.filter(x => x[0]===t).forEach(x => { const [,a,b] = x;
+          if (isEen(x)) pdfBalkEen(doc, PC[t], X0+(a-1)*CW+0.8, by, (b-a+1)*CW-1.6, lh);
+          else { doc.setFillColor(...PC[t]); doc.roundedRect(X0+(a-1)*CW+0.8, by, (b-a+1)*CW-1.6, lh, 1.2, 1.2, 'F'); } });
         by += 3.3;
       });
       ry += r.h; doc.setDrawColor(...LIN); doc.line(L, ry, X1, ry);
@@ -1077,28 +1126,51 @@ function kopGewas(doc, g){
   pdfIcoon(doc, g.id, M - 1, 13, 20);
   doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.setTextColor(...INK); doc.text(tx(g.naam), M + 22, y);
   doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(...MUT); doc.text(`${g.groep} - ${g.soort}`, M + 22, y+7);
+  if (g.meerjarig){
+    const x = M + 22 + doc.getTextWidth(`${g.groep} - ${g.soort}`) + 4;
+    pdfIcoon(doc, 'mj', x, y + 3.6, 4.6);
+    doc.setFont('helvetica','bold'); doc.setTextColor(...PC.buiten); doc.text(tx(`meerjarig, blijft ${g.meerjarig} staan`), x + 5.8, y + 7);
+  }
   return y + 15;
 }
 /* Grijs blok met plantgegevens, twee per regel. Geeft de y eronder terug. */
 function infoBlok(doc, info, y){
-  const M = 16, W = 178, h = 4 + Math.ceil(info.length/2)*9;
+  const M = 16, W = 178;
+  doc.setFont('helvetica','bold'); doc.setFontSize(9.5);
+  const regels = info.map(([,v]) => doc.splitTextToSize(tx(v), 82).slice(0, 2));
+  const rijH = [...Array(Math.ceil(info.length/2))].map((_, r) => 5 + 4*Math.max(...regels.slice(2*r, 2*r+2).map(l => l.length)));
+  const h = 3 + rijH.reduce((a, b) => a + b, 0);
   doc.setFillColor(242,245,239); doc.roundedRect(M, y, W, h, 2, 2, 'F');
-  info.forEach(([k,v],i) => {
-    const x = M + 5 + (i%2)*89, yy = y + 7 + Math.floor(i/2)*9;
+  info.forEach(([k],i) => {
+    const r = Math.floor(i/2), x = M + 5 + (i%2)*89, yy = y + 6.5 + rijH.slice(0, r).reduce((a, b) => a + b, 0);
     doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(...MUT); doc.text(k.toUpperCase(), x, yy);
-    doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(...INK); doc.text(doc.splitTextToSize(tx(v), 82)[0], x, yy+4.2);
+    doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(...INK); regels[i].forEach((l, j) => doc.text(l, x, yy + 4.2 + j*4));
   });
   return y + h;
 }
-const INFO_VOL = g => [['Zaai- of plantdiepte', g.diepte], ['Afstand', g.afstand], ['Water bij droogte', g.water], ['Tijd tot oogst', g.oogst]];
+const INFO_VOL = g => [['Zaai- of plantdiepte', g.diepte], ['Afstand', g.afstand], ['Water bij droogte', g.water], ['Tijd tot oogst', g.oogst], ...(g.meerjarig ? [['Blijft staan', g.meerjarig]] : [])];
 
 function gewasPagina(doc, g){
   const w = schrijver(doc);
   w.y = infoBlok(doc, INFO_VOL(g), kopGewas(doc, g)) + 9;
-  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...INK); doc.text('Wat moet er per maand gebeuren?', w.M, w.y); w.y += 6;
+  const eerste = g.taken.filter(isEen), jaarlijks = g.taken.filter(t => !isEen(t));
+  if (eerste.length){
+    doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...INK); doc.text('Het eerste jaar', w.M, w.y); w.y += 6;
+    eerste.sort((p, q) => p[1] - q[1]).forEach(([t, a, b, uitleg]) => {
+      doc.setDrawColor(...LIN); doc.setLineWidth(0.2); doc.line(w.M, w.y, w.M+w.W, w.y); w.y += 4.4;
+      doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(...INK); doc.text(cap(periode(a, b)), w.M, w.y);
+      pdfBalkEen(doc, PC[t], w.M+28, w.y-2.2, 4.5, 2.3);
+      doc.setFontSize(8.5); doc.text(TYPES[t], w.M+34.5, w.y);
+      doc.setFont('helvetica','normal'); doc.setFontSize(9);
+      const ls = doc.splitTextToSize(tx(uitleg), w.W-74); ls.forEach(l => { doc.text(l, w.M+74, w.y); w.y += 3.9; });
+      w.y += 1.4;
+    });
+    w.y += 5;
+  }
+  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...INK); doc.text(eerste.length ? 'Elk jaar: wat moet er per maand gebeuren?' : 'Wat moet er per maand gebeuren?', w.M, w.y); w.y += 6;
   /* Een taak krijgt zijn uitleg in de eerste maand; daarna staat hij onder 'Gaat door'.
      Opeenvolgende maanden zonder werk komen op één regel. Zo past de kleurplaat er nog onder. */
-  const takenIn = m => g.taken.filter(([,a,b]) => m>=a && m<=b).sort((p,q) => ORDER.indexOf(p[0]) - ORDER.indexOf(q[0]));
+  const takenIn = m => jaarlijks.filter(([,a,b]) => m>=a && m<=b).sort((p,q) => ORDER.indexOf(p[0]) - ORDER.indexOf(q[0]));
   const gezien = new Set(), sleutel = t => t[0] + '|' + t[3], X = w.M + 28;
   for (let m=1; m<=12; m++){
     const taken = takenIn(m);
@@ -1147,7 +1219,7 @@ function kleurplaatOpPagina(doc, g, top){
   const kp = KLEUR_PNG[g.id]; if (!kp) return;
   const M = 16, W = 178, BOT = 281, ruimte = BOT - top;
   const s = Math.min(W / kp.w, ruimte / kp.h);
-  if (kp.h * s < 40) return;
+  if (kp.h * s < 32) return;
   const bw = kp.w * s, bh = kp.h * s;
   doc.addImage(kp.url, 'PNG', M + (W - bw)/2, BOT - bh, bw, bh, 'kp-' + g.id, 'FAST');
 }
@@ -1165,7 +1237,7 @@ function maandPagina(doc, mi, lijst, v){
   w.y += 19 + tekst.length*4.5;
   let iets = false;
   ORDER.forEach(t => {
-    const items = []; lijst.forEach(g => g.taken.forEach(([ty,a,b,u]) => { if (ty===t && m>=a && m<=b) items.push([g.naam,u,g.id]); }));
+    const items = []; lijst.forEach(g => g.taken.forEach(x => { const [ty,a,b,u] = x; if (ty===t && m>=a && m<=b) items.push([g.naam, isEen(x) ? u + ' (Alleen het eerste jaar.)' : u, g.id]); }));
     if (!items.length) return; iets = true;
     w.ensure(16);
     if (v === 'boven') pdfActie(doc, t, w.M, w.y-5.4, 7.5);
@@ -1204,30 +1276,31 @@ function vakHoogte(doc, v, ts, w){
 /* Tekent de acties ts in het vakje x, y, w, h */
 function vakInhoud(doc, v, ts, x, y, w, h){
   if (!ts.length) return;
+  const ic = (t, ix, iy, s) => pdfActie(doc, t, ix, iy, s);
   if (v === 'kleuters'){
-    if (ts.length === 1){ const s = Math.min(w, h)*.74; pdfActie(doc, ts[0], x + (w-s)/2, y + (h-s)/2, s); return; }
+    if (ts.length === 1){ const s = Math.min(w, h)*.74; ic(ts[0], x + (w-s)/2, y + (h-s)/2, s); return; }
     /* naast elkaar of in een blok van 2 × 2: wat de grootste iconen geeft */
     const n = ts.length, g = Math.min(w, h)*.04;
     const sRij = Math.min(h*.78, (w - (n+1)*g)/n), sBlok = Math.min((w - 3*g)/2, (h - 3*g)/2);
     const perRij = sRij >= sBlok ? n : 2, s = Math.max(sRij, sBlok), rijen = Math.ceil(n/perRij), th = rijen*s + (rijen-1)*g;
     ts.forEach((t, i) => {
       const r = Math.floor(i/perRij), inRij = Math.min(perRij, n - r*perRij), tw = inRij*s + (inRij-1)*g;
-      pdfActie(doc, t, x + (w-tw)/2 + (i%perRij)*(s+g), y + (h-th)/2 + r*(s+g), s);
+      ic(t, x + (w-tw)/2 + (i%perRij)*(s+g), y + (h-th)/2 + r*(s+g), s);
     });
     return;
   }
   if (v === 'midden' && ts.length === 1){
-    const sc = w/17.4, s = Math.min(w, h)*.52, fs = 7*sc, lh = fs*RLIJN;
+    const sc = Math.min(w/17.4, 1.5), s = Math.min(w, h)*.52, fs = 7*sc, lh = fs*RLIJN;
     doc.setFont('helvetica','bold'); doc.setFontSize(fs); doc.setTextColor(...INK);
     const ls = doc.splitTextToSize(tx(WOORD[ts[0]]), w - 2), th = s + 1 + ls.length*lh, y0 = y + (h - th)/2;
-    pdfActie(doc, ts[0], x + (w-s)/2, y0, s);
+    ic(ts[0], x + (w-s)/2, y0, s);
     ls.forEach((l, i) => doc.text(l, x + w/2, y0 + s + 1 + lh*(i + .8), {align:'center'}));
     return;
   }
   const L = vakLijst(doc, v, ts, w); let cy = y + (h - L.h)/2;
   doc.setTextColor(...INK);
   L.items.forEach(it => {
-    pdfActie(doc, it.t, x + .9*L.sc, cy + (it.h - L.ic)/2, L.ic);
+    ic(it.t, x + .9*L.sc, cy + (it.h - L.ic)/2, L.ic);
     const ty = cy + (it.h - it.ls.length*L.lh)/2 + L.lh*.78;
     it.ls.forEach((l, i) => doc.text(l, x + L.ic + 1.8*L.sc, ty + i*L.lh));
     cy += it.h + L.gap;
@@ -1237,14 +1310,12 @@ function vakje(doc, x, y, w, h){
   doc.setFillColor(247,249,245); doc.setDrawColor(...LIN); doc.setLineWidth(0.25);
   doc.roundedRect(x, y, w, h, 1.6, 1.6, 'FD');
 }
-function pdfLegendaIconen(doc, v, x, y, max){
+function pdfLegendaIconen(doc, v, x, y, max, lijst){
   const x0 = x;
-  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...INK);
-  ORDER.forEach(t => {
-    const lab = vakLabel(v, t), bw = 6.5 + doc.getTextWidth(lab) + 5;
-    if (x + bw - 6 > max){ x = x0; y += 6.5; }
-    pdfActie(doc, t, x, y - 4, 5); doc.text(lab, x + 6.5, y); x += bw;
-  });
+  const stuk = (bw, teken) => { if (x + bw - 6 > max){ x = x0; y += 6.5; } doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...INK); teken(x); x += bw; };
+  doc.setFont('helvetica','normal'); doc.setFontSize(9);
+  typenIn(lijst).forEach(t => { const lab = vakLabel(v, t); stuk(6.5 + doc.getTextWidth(lab) + 5, x => { pdfActie(doc, t, x, y - 4, 5); doc.text(lab, x + 6.5, y); }); });
+  if (lijst.some(g => g.meerjarig)){ const lab = 'meerjarig'; stuk(6.5 + doc.getTextWidth(lab) + 5, x => { pdfIcoon(doc, 'mj', x, y - 4, 5); doc.text(lab, x + 6.5, y); }); }
 }
 
 function rasterOverzicht(doc, lijst, v){
@@ -1261,7 +1332,7 @@ function rasterOverzicht(doc, lijst, v){
     doc.text(pi ? 'Jaaroverzicht (vervolg)' : 'Schooltuinkalender - jaaroverzicht', L, 18);
     doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...MUT);
     doc.text(tx(`Voor ${WEERGAVEN[v].pdf}. ${lijst.length} gewassen gekozen. Elk vakje is een maand.`), L, 25);
-    pdfLegendaIconen(doc, v, L, 33, X1);
+    pdfLegendaIconen(doc, v, L, 33, X1, lijst);
     doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...INK);
     KORT.forEach((k,i) => doc.text(k, X0 + i*CW + CW/2, TOP+5.2, {align:'center'}));
     let ry = TOP+8;
@@ -1272,7 +1343,7 @@ function rasterOverzicht(doc, lijst, v){
       const ls = doc.splitTextToSize(tx(r.g.naam), X0 - L - is - 3.5);
       const nh = ls.length*4 + (v === 'kleuters' ? 0 : 3.4);
       ls.forEach((l, i) => doc.text(l, L + is + 2.5, ry + r.h/2 - nh/2 + 3 + i*4));
-      if (v !== 'kleuters'){ doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(...MUT); doc.text(r.g.soort, L + is + 2.5, ry + r.h/2 - nh/2 + 3 + ls.length*4 - .4); }
+      if (v !== 'kleuters'){ doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(...MUT); doc.text(r.g.soort + (r.g.meerjarig ? ' - meerjarig' : ''), L + is + 2.5, ry + r.h/2 - nh/2 + 3 + ls.length*4 - .4); }
       r.per.forEach((ts, i) => {
         const x = X0 + i*CW + P, y = ry + P, w = CW - 2*P, h = r.h - 2*P;
         vakje(doc, x, y, w, h); vakInhoud(doc, v, ts, x, y, w, h);
@@ -1284,7 +1355,7 @@ function rasterOverzicht(doc, lijst, v){
 
 /* Gewaspagina voor de rasterweergaven: maandstrook van 3 rijen × 4 vakjes en de kleurplaat */
 function gewasPaginaRaster(doc, g, v){
-  const M = 16, W = 178, GAP = 3, CW = (W - 3*GAP)/4, VH = v === 'kleuters' ? 26 : 20;
+  const M = 16, W = 178, GAP = 3, CW = (W - 3*GAP)/4, VH = v === 'kleuters' ? 26 : v === 'midden' ? 20 : 17;
   let y = kopGewas(doc, g);
   if (v === 'midden') y = infoBlok(doc, [['Zo diep zaai of plant je', g.diepte], ['Je kunt oogsten na', g.oogst]], y) + 4;
   if (v === 'boven') y = infoBlok(doc, INFO_VOL(g), y) + 4;
@@ -1303,18 +1374,26 @@ function gewasPaginaRaster(doc, g, v){
   }
   if (v === 'boven'){
     y += 4;
-    doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...INK); doc.text('Zo doe je het', M, y); y += 6;
-    const taken = [...g.taken].sort((p, q) => ORDER.indexOf(p[0]) - ORDER.indexOf(q[0]) || p[1] - q[1]);
+    const blok = (titel, taken) => {
+    if (!taken.length) return;
+    doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...INK); doc.text(titel, M, y); y += 6;
+    taken.sort((p, q) => ORDER.indexOf(p[0]) - ORDER.indexOf(q[0]) || p[1] - q[1]);
     taken.forEach(([t, a, b, uitleg]) => {
       doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
-      const ls = doc.splitTextToSize(tx(uitleg), W - 62);
-      pdfActie(doc, t, M, y - 4, 5.5);
-      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...INK); doc.text(TYPES[t], M + 7.5, y);
-      doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...MUT); doc.text(tx(periode(a, b)), M + 7.5, y + 3.8);
+      const ls = doc.splitTextToSize(tx(uitleg), W - 68);
+      pdfActie(doc, t, M, y - 3.6, 4.8);
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...INK); doc.text(TYPES[t], M + 6.5, y);
+      const lw = doc.getTextWidth(TYPES[t]);
+      doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...MUT); doc.text(tx(periode(a, b)), M + 6.5 + lw + 2, y);
       doc.setFontSize(9.5); doc.setTextColor(...INK);
-      ls.forEach((l, i) => doc.text(l, M + 62, y + i*4.2));
-      y += Math.max(8.2, ls.length*4.2 + 1.6);
+      ls.forEach((l, i) => doc.text(l, M + 68, y + i*4.2));
+      y += Math.max(5.8, ls.length*4.2 + 1.6);
     });
+    y += 2;
+    };
+    const eerste = g.taken.filter(isEen);
+    blok(eerste.length ? 'Het eerste jaar' : 'Zo doe je het', eerste.length ? eerste : [...g.taken]);
+    if (eerste.length) blok('Elk jaar', g.taken.filter(t => !isEen(t)));
   }
   kleurplaatOpPagina(doc, g, y + 4);
 }
@@ -1325,7 +1404,7 @@ function maandPaginaRaster(doc, mi, lijst, v){
   doc.setFont('helvetica','bold'); doc.setFontSize(26); doc.setTextColor(...INK); doc.text(cap(MAANDEN[mi]), M, 25);
   doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(...MUT);
   doc.text(v === 'kleuters' ? 'Wat doen we deze maand in de tuin?' : 'Wat doen we deze maand in de schooltuin?', M, 32);
-  pdfLegendaIconen(doc, v, M, 41, M + W);
+  pdfLegendaIconen(doc, v, M, 41, M + W, lijst);
   const items = lijst.map(g => ({g, ts: soortenIn(g, mi+1)})).filter(i => i.ts.length);
   let y = 50;
   if (!items.length){
@@ -1351,7 +1430,8 @@ function maandPaginaRaster(doc, mi, lijst, v){
         doc.setFontSize(9);
         it.ts.forEach((t, j) => {
           const cx = x + 18 + (j%2)*33, cy = y + 11 + Math.floor(j/2)*9;
-          pdfActie(doc, t, cx, cy, 7.5); doc.text(WOORD[t], cx + 9, cy + 5);
+          pdfActie(doc, t, cx, cy, 7.5);
+          doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...INK); doc.text(WOORD[t], cx + 9, cy + 5);
         });
       }
     });
