@@ -542,6 +542,366 @@ $('chart').addEventListener('click', e => {
   }
 });
 
+/* ---------- Kleurplaten: lijntekeningen per gewas voor de PDF ---------- */
+/* Eenheden: 0,1 mm bij 180 mm breed. De figuurtjes zijn
+   lijnversies van de icoontjes hierboven, met armpjes, beentjes en een eigen tafereel. */
+const KP = {LW:7, INK:'#1d1d1b', S:1.3};
+const STAAND = {
+  courgette: `<path d="M17 6c0-2 1-4 3-4" stroke="#6b8f3a" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="10" y="5" width="12" height="25" rx="6" fill="#3e7d34"/><path d="M13.5 21v5" stroke="#6aa956" stroke-width="1" stroke-linecap="round"/>${gezicht(16,14,.8)}`,
+  sperzieboon: `<path d="M15 4c-1-2-3-2-4-1" stroke="#5a8f2f" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M13 4c2-1 5 0 5 3v18c0 3-1 5-3 5.5-2 0-3-2-3-4.5V7c0-1 0-2 1-3z" fill="#6ab04c"/>${gezicht(15,12,.55)}`,
+  peultjes: `<path d="M16 2c0-2 2-2.5 3.5-1.5" stroke="#5f9a3a" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M16 2c4 3 6.5 9 6.5 15S20 28 16 30c-4-2-6.5-7-6.5-13S12 5 16 2z" fill="#8fcf5f"/><g fill="#b9e58f"><circle cx="16" cy="21" r="2"/><circle cx="16" cy="25.6" r="1.7"/></g>${gezicht(16,13,.7)}`
+};
+/* Worteltjes en steeltjes onderaan die in de lijntekening tussen de beentjes komen: weglaten */
+const ZONDER_WORTEL = {spinazie:'M16 30v-6', lenteui:'M14 29l-1 2M16 29v2M18 29l1 2', biet:'M16 31c-1-2-1-3 0-4', radijs:'M16 31v-5'};
+const lijfBron = id => {
+  const src = STAAND[id] || ICON[id], d = ZONDER_WORTEL[id];
+  return d ? src.replace(new RegExp(`<path d="${d.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"[^>]*/>`), '') : src;
+};
+/* Ankerpunten in icoon-eenheden: schouders (sl, sr) en heupen (hl, hr) */
+const ANKER = {
+  pluksla:{sl:[5,18],sr:[27,18],hl:[12,23.5],hr:[20,23.5]},
+  rucola:{sl:[10.5,16],sr:[21.5,16],hl:[14,27],hr:[18,27]},
+  spinazie:{sl:[6.5,15],sr:[25.5,15],hl:[13,24],hr:[19,24]},
+  snijbiet:{sl:[15.2,21],sr:[16.8,21],hl:[15.2,29.5],hr:[16.8,29.5]},
+  andijvie:{sl:[4.5,18],sr:[27.5,18],hl:[12,26.5],hr:[20,26.5]},
+  veldsla:{sl:[4,16],sr:[28,16],hl:[12.5,27.5],hr:[19.5,27.5]},
+  radijs:{sl:[7.8,19],sr:[24.2,19],hl:[12.5,26],hr:[19.5,26]},
+  biet:{sl:[7.8,19],sr:[24.2,19],hl:[12.5,26],hr:[19.5,26]},
+  wortel:{sl:[10.5,14],sr:[21.5,14],hl:[14.5,25],hr:[17.5,25]},
+  lenteui:{sl:[11.3,22],sr:[20.7,22],hl:[14,28.6],hr:[18,28.6]},
+  aardappel:{sl:[5.5,17],sr:[26.5,16],hl:[12,26.5],hr:[20,26.5]},
+  courgette:{sl:[10.2,17],sr:[21.8,17],hl:[13.5,29.3],hr:[18.5,29.3]},
+  sperzieboon:{sl:[12.2,15],sr:[17.8,15],hl:[13.5,29.5],hr:[16.5,29.5]},
+  peultjes:{sl:[9.8,16],sr:[22.2,16],hl:[14,29],hr:[18,29]},
+  cherrytomaat:{sl:[6.2,19],sr:[25.8,19],hl:[12,26.9],hr:[20,26.9]},
+  aardbei:{sl:[6.8,15],sr:[25.2,15],hl:[13,26],hr:[19,26]},
+  framboos:{sl:[5.8,17.5],sr:[26.2,17.5],hl:[12.5,28],hr:[19.5,28]},
+  braam:{sl:[5.8,17.5],sr:[26.2,17.5],hl:[12.5,28],hr:[19.5,28]},
+  rodebes:{sl:[4.2,18.5],sr:[27.8,19.5],hl:[13,29.5],hr:[19,29.5]},
+  blauwebes:{sl:[5.2,18],sr:[26.8,18],hl:[12,26.5],hr:[20,26.5]}
+};
+const r1 = v => +v.toFixed(1), r2 = v => +v.toFixed(2);
+
+/* Maakt van een gekleurd icoon een lijntekening: witte vlakken met zwarte rand. */
+function lijnIcoon(src, k){
+  const sw = KP.LW / k, ser = new XMLSerializer();
+  const root = new DOMParser().parseFromString(`<svg xmlns="http://www.w3.org/2000/svg">${src}</svg>`, 'image/svg+xml').documentElement;
+  root.querySelectorAll('[opacity]').forEach(e => e.remove());
+  [...root.querySelectorAll('*')].forEach(e => {
+    const f = e.getAttribute('fill'), s = e.getAttribute('stroke');
+    if (s && s !== 'none'){
+      const w = +(e.getAttribute('stroke-width') || 1);
+      if (w >= 1.5){
+        const c = e.cloneNode(true);
+        c.setAttribute('stroke', KP.INK); c.setAttribute('stroke-width', r2(w + 2*sw));
+        e.parentNode.insertBefore(c, e); e.setAttribute('stroke', '#fff');
+      } else { e.setAttribute('stroke', KP.INK); e.setAttribute('stroke-width', r2(sw*.85)); e.setAttribute('stroke-linecap','round'); }
+    }
+    if (f && f !== 'none'){
+      if (e.tagName === 'circle' && +e.getAttribute('r') <= 1.15 && e.parentNode === root){ e.setAttribute('fill', KP.INK); return; }
+      e.setAttribute('fill', '#fff'); e.setAttribute('stroke', KP.INK); e.setAttribute('stroke-width', r2(sw)); e.setAttribute('stroke-linejoin','round');
+    }
+  });
+  return [...root.childNodes].map(n => ser.serializeToString(n)).join('').replace(/ xmlns="[^"]*"/g, '');
+}
+
+const BENEN = {staan:[6,6], lopen:[28,-16], springen:[40,40], schoppen:[4,80], zitten:[-12,14], wijd:[22,22]};
+const HOED = {
+  feest: (y) => `<path d="M11.5 ${y}L16 ${y-10}L20.5 ${y}Z"/><path d="M13 ${y-3.5}l5.5-1.2M14.3 ${y-6.8}l3-.8" fill="none"/><circle cx="16" cy="${y-10.6}" r="1.5"/>`,
+  pet: (y) => `<path d="M10 ${y}c0-6 12-6 12 0z"/><path d="M21 ${y}c3 0 6 .5 6.5 1.5H18z"/>`,
+  stro: (y) => `<ellipse cx="16" cy="${y}" rx="10" ry="2.2"/><path d="M11 ${y-.5}c0-6 10-6 10 0z"/><path d="M11.2 ${y-2}c3 1 6.6 1 9.6 0" fill="none"/>`,
+  kroon: (y) => `<path d="M11 ${y}l-.5-6 3 3 2.5-4.5 2.5 4.5 3-3-.5 6z"/>`
+};
+
+/* Eén figuurtje. o.x/o.y = waar de voetjes de grond raken, o.h = grootte. */
+function fig(id, o){
+  const h = (o.h || 300)*KP.S, k = h/32, A = ANKER[id], sw = KP.LW/k, flip = !!o.flip;
+  const benen = o.benen || 'staan', hip = Math.max(A.hl[1], A.hr[1]);
+  const gy = o.zit ? hip + 1 : benen === 'geen' ? 31.5 : hip + 8.6;
+  const tx = o.x - 16*k, ty = o.y - gy*k, cx = o.x, cy = o.y - h/2, rot = (o.r || 0) * Math.PI/180;
+  const naar = ([lx, ly]) => {
+    const X = tx + (flip ? 32 - lx : lx)*k, Y = ty + ly*k;
+    if (!rot) return [r1(X), r1(Y)];
+    const dx = X - cx, dy = Y - cy;
+    return [r1(cx + dx*Math.cos(rot) - dy*Math.sin(rot)), r1(cy + dx*Math.sin(rot) + dy*Math.cos(rot))];
+  };
+  const van = ([X, Y]) => { const lx = (X - tx)/k; return [flip ? 32 - lx : lx, (Y - ty)/k]; };
+  const lijn = `stroke="${KP.INK}" stroke-width="${r2(sw*1.15)}" fill="none" stroke-linecap="round"`;
+  const vlak = `fill="#fff" stroke="${KP.INK}" stroke-width="${r2(sw)}" stroke-linejoin="round"`;
+  let achter = '', voor = '';
+  const handen = {};
+  const arm = (kant, S, a, b, doel, naam) => {
+    let E;
+    if (doel) E = van(doel);
+    else { const t = a*Math.PI/180; E = [S[0] + kant*Math.sin(t)*8.5, S[1] + Math.cos(t)*8.5]; }
+    const dx = E[0]-S[0], dy = E[1]-S[1], L = Math.hypot(dx, dy) || 1, bb = (b ?? 1.6)*kant;
+    const C = [(S[0]+E[0])/2 + dy/L*bb, (S[1]+E[1])/2 - dx/L*bb];
+    achter += `<path d="M${r2(S[0])} ${r2(S[1])}Q${r2(C[0])} ${r2(C[1])} ${r2(E[0])} ${r2(E[1])}" ${lijn}/>`;
+    voor += `<circle cx="${r2(E[0])}" cy="${r2(E[1])}" r="2.1" ${vlak}/>`;
+    handen[naam] = naar(E);
+  };
+  if (benen !== 'geen'){
+    const [al, ar] = BENEN[benen];
+    [[-1, A.hl, al], [1, A.hr, ar]].forEach(([kant, H, a]) => {
+      const t = a*Math.PI/180, F = [H[0] + kant*Math.sin(t)*6.5, H[1] + Math.cos(t)*6.5];
+      achter += `<path d="M${H[0]} ${H[1]}L${r2(F[0])} ${r2(F[1])}" ${lijn}/>`;
+      achter += `<ellipse cx="${r2(F[0]+kant*1.2)}" cy="${r2(F[1]+.5)}" rx="2.8" ry="1.6" transform="rotate(${r1(kant*a*.4)} ${r2(F[0]+kant*1.2)} ${r2(F[1]+.5)})" ${vlak}/>`;
+    });
+  }
+  if (o.aL !== false) arm(-1, A.sl, o.aL ?? 25, o.bL, o.naarL, 'l');
+  if (o.aR !== false) arm(1, A.sr, o.aR ?? 25, o.bR, o.naarR, 'r');
+  const lijf = lijnIcoon(lijfBron(id), k);
+  const hoed = o.hoed ? `<g ${vlak}>${HOED[o.hoed](o.hoedY ?? 6)}</g>` : '';
+  const spiegel = flip ? ' translate(32 0) scale(-1 1)' : '';
+  const svg = `<g transform="${o.r ? `rotate(${o.r} ${r1(cx)} ${r1(cy)}) ` : ''}translate(${r1(tx)} ${r1(ty)}) scale(${r2(k)})${spiegel}">${achter}${lijf}${hoed}${voor}</g>`;
+  return {svg, handen, top: naar([16, 4]), midden: naar([16, 18])};
+}
+
+/* ---------- Voorwerpen (in scène-eenheden) ---------- */
+const kp = {
+  bloem: (x, y, h = 120, s = 1) => {
+    const kx = x, ky = y - h; let b = '';
+    for (let i = 0; i < 5; i++){ const t = i*2*Math.PI/5 - Math.PI/2; b += `<circle class="o" cx="${r1(kx+Math.cos(t)*20*s)}" cy="${r1(ky+Math.sin(t)*20*s)}" r="${r1(15*s)}"/>`; }
+    return `<path class="l" d="M${x} ${y}V${ky}"/><path class="o" d="M${x} ${y-h*.35}c20-25 45-25 55-20-10 25-35 30-55 20z"/>${b}<circle class="o" cx="${kx}" cy="${ky}" r="${r1(13*s)}"/>`;
+  },
+  noot: (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})"><ellipse class="o" cx="0" cy="0" rx="16" ry="12" transform="rotate(-20)"/><path class="l" d="M14 -4V-70q20 8 26 30"/></g>`,
+  druppel: (x, y, s = 1) => `<path class="o" transform="translate(${x} ${y}) scale(${s})" d="M0-26C8-12 14-4 14 4a14 14 0 0 1-28 0c0-8 6-16 14-30z"/>`,
+  hartje: (x, y, s = 1) => `<path class="o" transform="translate(${x} ${y}) scale(${s})" d="M0 22C-30 0-30-22-14-24-6-25 0-18 0-12c0-6 6-13 14-12 16 2 16 24-14 46z"/>`,
+  vlinder: (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})"><path class="o" d="M0 0c-20-30-50-25-45-2 3 12 25 12 45 2zM0 0c20-30 50-25 45-2-3 12-25 12-45 2zM0 2c-15 10-30 25-20 32 8 5 18-15 20-32zM0 2c15 10 30 25 20 32-8 5-18-15-20-32z"/><path class="l" d="M0-14V22M0-14q-6-14-14-16M0-14q6-14 14-16"/></g>`
+};
+const plat = a => a.map(f => f.svg).join('');
+
+/* ---------- Taferelen ---------- */
+const TAFEREEL = {
+  // picknick op een kleed met een mand
+  pluksla(){
+    const kleed = `<path class="o" d="M330 940L1470 940 1330 760 470 760Z"/>` +
+      [1, 2, 3, 4, 5].map(i => { const t = i/6; return `<path class="d" d="M${r1(330+1140*t)} 940L${r1(470+860*t)} 760"/>`; }).join('') +
+      [1, 2].map(i => { const t = i/3, y = 940 - 180*t; return `<path class="d" d="M${r1(330+140*t)} ${y}H${r1(1470-140*t)}"/>`; }).join('');
+    const mand = `<path class="o" d="M1180 800h190l-22 100h-146z"/><path class="l" d="M1205 800c0-90 140-90 140 0"/><path class="d" d="M1190 835h170M1198 868h154"/>`;
+    const a = fig('pluksla', {x:520, y:860, h:240, zit:true, benen:'zitten', aL:40, aR:120});
+    const b = fig('pluksla', {x:820, y:830, h:270, zit:true, benen:'zitten', aL:150, aR:150});
+    const c = fig('pluksla', {x:1060, y:880, h:230, zit:true, benen:'zitten', aL:30, aR:75});
+    const appel = `<circle class="o" cx="${c.handen.r[0]+26}" cy="${c.handen.r[1]-14}" r="34"/><path class="l" d="M${c.handen.r[0]+26} ${c.handen.r[1]-48}q4-18 16-22"/>`;
+    return kleed + mand + plat([b, a, c]) + appel;
+  },
+  // polonaise met een vlaggetje voorop
+  rucola(){
+    const xs = [330, 620, 910, 1200], fs = xs.map((x, i) => fig('rucola', {x, y:880 - (i%2)*16, h:290, benen:'lopen', aL:i ? 60 : 20, aR:i === 3 ? 170 : 100}));
+    const v = fs[3].handen.r;
+    const vlag = `<path class="l" d="M${v[0]} ${v[1]+40}V${v[1]-170}"/><path class="o" d="M${v[0]} ${v[1]-170}h150l-35 50 35 50H${v[0]}z"/>`;
+    return plat(fs) + vlag + kp.noot(220, 380) + kp.noot(1450, 520, .9);
+  },
+  // krachtpatser met halter, vriendjes juichen
+  spinazie(){
+    const m = fig('spinazie', {x:900, y:880, h:300, benen:'wijd', naarL:[800, 470], naarR:[1000, 470], bL:2, bR:2});
+    const [l, r] = [m.handen.l, m.handen.r], y = (l[1] + r[1])/2;
+    const halter = `<path class="l" d="M${l[0]-60} ${y}H${r[0]+60}" style="stroke-width:16"/><path class="l" d="M${l[0]-60} ${y}H${r[0]+60}" style="stroke:#fff;stroke-width:4"/>` +
+      [l[0]-80, r[0]+80].map(x => `<rect class="o" x="${x-22}" y="${y-70}" width="44" height="140" rx="16"/>`).join('');
+    const a = fig('spinazie', {x:400, y:860, h:250, benen:'springen', aL:150, aR:140});
+    const b = fig('spinazie', {x:1400, y:860, h:250, benen:'springen', aL:140, aR:150});
+    return plat([a, b, m]) + halter + kp.hartje(560, 300, 1.3) + kp.hartje(1240, 300, 1.3);
+  },
+  // samen onder een paraplu in de regen
+  snijbiet(){
+    const m = fig('snijbiet', {x:900, y:880, h:300, aL:30, aR:150});
+    const h = m.handen.r, top = [h[0]-40, 200];
+    const paraplu = `<path class="l" d="M${h[0]} ${h[1]+50}V${top[1]}"/><path class="l" d="M${h[0]} ${h[1]+50}q0 40 -40 40"/>` +
+      `<path class="o" d="M${top[0]-420} ${top[1]+130}C${top[0]-380} ${top[1]-60} ${top[0]+380} ${top[1]-60} ${top[0]+420} ${top[1]+130}q-70-40-140 0q-70-40-140 0q-70-40-140 0q-70-40-140 0q-70-40-140 0q-70-40-140 0z"/>` +
+      `<path class="d" d="M${top[0]} ${top[1]-12}L${top[0]-140} ${top[1]+130}M${top[0]} ${top[1]-12}L${top[0]+140} ${top[1]+130}"/>`;
+    const a = fig('snijbiet', {x:580, y:890, h:260, aL:20, aR:60});
+    const b = fig('snijbiet', {x:1220, y:890, h:260, aL:70, aR:20});
+    const regen = [[150, 330], [250, 540], [170, 740], [1500, 400], [1660, 560], [1590, 760], [1420, 300], [420, 260], [1720, 330]].map(([x, y]) => kp.druppel(x, y, 1.2)).join('');
+    const plas = `<ellipse class="o" cx="1450" cy="920" rx="170" ry="34"/>`;
+    return plas + plat([a, b]) + m.svg + paraplu + regen;
+  },
+  // op een bankje in het park
+  andijvie(){
+    const leuning = `<rect class="o" x="380" y="470" width="1040" height="44" rx="10"/><rect class="o" x="380" y="540" width="1040" height="44" rx="10"/><path class="o" d="M450 584v120h30V584zM1320 584v120h30V584z"/>`;
+    const poten = `<rect class="o" x="450" y="740" width="34" height="150"/><rect class="o" x="1316" y="740" width="34" height="150"/>`;
+    const a = fig('andijvie', {x:600, y:705, h:250, zit:true, benen:'zitten', aL:20, aR:60, hoed:'stro', hoedY:6});
+    const b = fig('andijvie', {x:900, y:705, h:250, zit:true, benen:'zitten', aL:110, aR:20});
+    const c = fig('andijvie', {x:1200, y:705, h:250, zit:true, benen:'zitten', aL:30, aR:150});
+    const zitting = `<rect class="o" x="360" y="700" width="1080" height="44" rx="10"/>`;
+    return leuning + poten + plat([a, b, c]) + zitting + kp.vlinder(1580, 470, 1.3);
+  },
+  // rondedans: handjes vast in een kring
+  veldsla(){
+    const xs = [330, 615, 900, 1185, 1470], ys = xs.map(x => 880 - 40*Math.cos((x - 900)/570*Math.PI/2));
+    const h = 250*KP.S, k = h/32, schouder = (x, y) => y - (27.5 + 8.6 - 16)*k;
+    const mid = i => [(xs[i] + xs[i+1])/2, Math.max(schouder(xs[i], ys[i]), schouder(xs[i+1], ys[i+1])) + 30];
+    const fs = xs.map((x, i) => fig('veldsla', {x, y:ys[i], h:250, benen: i % 2 ? 'springen' : 'lopen',
+      naarL: i ? mid(i-1) : undefined, aL: 150, naarR: i < 4 ? mid(i) : undefined, aR: 150}));
+    return plat(fs) + kp.noot(170, 380) + kp.noot(1640, 420, .9) + kp.noot(900, 300, .8);
+  },
+  // een piramide van radijsjes
+  radijs(){
+    const k = 240*KP.S/32, onder = 890, rijH = (34.6 - 11)*k;
+    const rij1 = [580, 900, 1220].map(x => fig('radijs', {x, y:onder, h:240, aL:60, aR:60}));
+    const rij2 = [740, 1060].map(x => fig('radijs', {x, y:onder - rijH, h:240, aL:110, aR:110}));
+    const top = fig('radijs', {x:900, y:onder - 2*rijH, h:240, aL:160, aR:160, bL:0, bR:0});
+    const ster = (x, y, s) => `<path class="o" transform="translate(${x} ${y}) scale(${s})" d="M0-40l12 26 28 3-21 19 6 28L0 22l-25 14 6-28-21-19 28-3z"/>`;
+    return plat(rij1) + plat(rij2) + top.svg + ster(520, 200, 1.2) + ster(1300, 180, 1) + ster(330, 480, .8) + ster(1480, 460, .7);
+  },
+  // op de wip
+  biet(){
+    const wip = `<path class="o" d="M900 880l-80 0 80-140 80 140z"/>`;
+    const plank = `<path class="o" transform="rotate(-8 900 740)" d="M360 725h1080v30H360z"/>`;
+    const yAt = x => 740 + Math.tan(-8*Math.PI/180)*(x - 900);
+    const a = fig('biet', {x:500, y:yAt(500) - 18, h:240, zit:true, benen:'zitten', aL:150, aR:40});
+    const b = fig('biet', {x:1300, y:yAt(1300) - 18, h:240, zit:true, benen:'zitten', aL:40, aR:150});
+    const c = fig('biet', {x:1600, y:885, h:210, aL:150, aR:20, hoed:'pet', hoedY:9.5});
+    return wip + plat([a, b]) + plank + c.svg;
+  },
+  // eentje staat op een kist en houdt een praatje, met lege spreekwolk
+  wortel(){
+    const kist = `<rect class="o" x="720" y="720" width="360" height="170"/><path class="d" d="M720 777h360M720 834h360"/><rect class="o" x="820" y="750" width="160" height="70" rx="8"/>`;
+    const m = fig('wortel', {x:900, y:720, h:270, aL:20, aR:165, bR:.5});
+    const wolk = `<path class="o" transform="translate(-20 -30)" d="M1120 120h420a50 50 0 0 1 50 50v150a50 50 0 0 1-50 50H1220l-90 70 20-70h-30a50 50 0 0 1-50-50V170a50 50 0 0 1 50-50z"/>`;
+    const a = fig('wortel', {x:330, y:880, h:250, aL:20, aR:120, flip:true});
+    const b = fig('wortel', {x:550, y:890, h:220, aL:20, aR:20});
+    const c = fig('wortel', {x:1260, y:890, h:230, aL:150, aR:20});
+    const d = fig('wortel', {x:1480, y:880, h:250, aL:20, aR:30, hoed:'pet', hoedY:9});
+    return kist + plat([a, b, c, d]) + m.svg + wolk;
+  },
+  // een bandje met trommel en muzieknootjes
+  lenteui(){
+    const t = fig('lenteui', {x:820, y:880, h:280, naarL:[930, 700], naarR:[1010, 690]});
+    const trom = `<path class="o" d="M940 760v100c0 34 260 34 260 0V760z"/><ellipse class="o" cx="1070" cy="760" rx="130" ry="30"/><path class="d" d="M945 780l60 90 60-90 60 90 65-90"/>`;
+    const stok = (h, x2, y2) => `<path class="l" d="M${h[0]} ${h[1]}L${x2} ${y2}"/><circle class="o" cx="${x2}" cy="${y2}" r="13"/>`;
+    const a = fig('lenteui', {x:400, y:880, h:270, benen:'lopen', aL:150, aR:120});
+    const b = fig('lenteui', {x:1450, y:880, h:270, benen:'springen', aL:130, aR:155});
+    const sambaBal = h => `<path class="l" d="M${h[0]} ${h[1]}l-10-50"/><ellipse class="o" cx="${h[0]-14}" cy="${h[1]-80}" rx="26" ry="34"/>`;
+    return plat([a, b]) + trom + t.svg + stok(t.handen.l, 1040, 752) + stok(t.handen.r, 1110, 748) + sambaBal(b.handen.l) + sambaBal(b.handen.r) +
+      kp.noot(220, 360) + kp.noot(700, 260, .8) + kp.noot(1120, 300, 1) + kp.noot(1640, 420, .8);
+  },
+  // ritje in de kruiwagen
+  aardappel(){
+    const bak = `<path class="o" d="M700 620H1220L1150 800H770Z"/><path class="d" d="M730 680H1195"/>`;
+    const wiel = `<circle class="o" cx="1180" cy="820" r="62"/><circle class="o" cx="1180" cy="820" r="14"/><path class="l" d="M1150 800l30 20M770 800l-20 80M520 700L760 760"/>`;
+    const a = fig('aardappel', {x:860, y:680, h:220, benen:'geen', aL:150, aR:60});
+    const b = fig('aardappel', {x:1060, y:670, h:230, benen:'geen', aL:60, aR:160});
+    const p = fig('aardappel', {x:380, y:880, h:250, benen:'lopen', naarL:[505, 692], naarR:[530, 706]});
+    return plat([a, b]) + bak + wiel + p.svg + kp.vlinder(300, 330, 1.2);
+  },
+  // touwtjespringen
+  courgette(){
+    const a = fig('courgette', {x:330, y:880, h:300, naarR:[560, 640], aL:30});
+    const b = fig('courgette', {x:1470, y:880, h:300, naarL:[1240, 640], aR:30});
+    const s = fig('courgette', {x:900, y:790, h:290, benen:'springen', aL:120, aR:120});
+    const touw = `<path class="l" d="M560 640Q900 1080 1240 640"/>`;
+    return touw + plat([a, b, s]);
+  },
+  // klimmen in de bonenstaak
+  sperzieboon(){
+    const staak = `<path class="o" d="M700 885L880 170 905 172 735 888Z"/><path class="o" d="M1100 885L920 170 895 172 1065 888Z"/><path class="l" d="M860 200l80 0M845 240q55 30 110 0"/>`;
+    const blad = (x, y, r) => `<path class="o" transform="translate(${x} ${y}) rotate(${r})" d="M0 0c30-40 80-30 90 0-20 30-70 35-90 0z"/><path class="d" transform="translate(${x} ${y}) rotate(${r})" d="M0 0h70"/>`;
+    const bladeren = [[760, 760, -150], [790, 560, -160], [850, 380, -140], [1040, 700, -20], [1000, 480, -40], [960, 300, -10]].map(b => blad(...b)).join('');
+    const k = fig('sperzieboon', {x:800, y:700, h:240, benen:'schoppen', naarL:[790, 450], naarR:[830, 400]});
+    const t = fig('sperzieboon', {x:930, y:300, h:180, zit:true, benen:'zitten', aL:150, aR:40});
+    const a = fig('sperzieboon', {x:430, y:880, h:270, aL:20, aR:150});
+    const b = fig('sperzieboon', {x:1350, y:880, h:270, benen:'springen', aL:150, aR:150});
+    return staak + bladeren + plat([k, t, a, b]);
+  },
+  // luieren in de hangmat
+  peultjes(){
+    const palen = `<rect class="o" x="330" y="420" width="40" height="470"/><rect class="o" x="1430" y="420" width="40" height="470"/>`;
+    const a = fig('peultjes', {x:680, y:640, h:220, benen:'geen', aL:150, aR:60, r:-10});
+    const b = fig('peultjes', {x:900, y:680, h:230, benen:'geen', aL:160, aR:160});
+    const c = fig('peultjes', {x:1120, y:640, h:220, benen:'geen', aL:60, aR:150, r:10});
+    const mat = `<path class="o" d="M370 480Q900 720 1430 480 1300 880 900 880 500 880 370 480Z"/><path class="d" d="M520 640Q900 840 1280 640M620 600l60 260M780 640l40 230M1180 600l-60 260M1020 640l-40 230M900 660v215"/>`;
+    const zzz = `<path class="l" style="stroke-width:12" d="M1500 300h70l-70 80h70M1600 200h50l-50 58h50"/>`;
+    return palen + plat([a, b, c]) + mat + zzz;
+  },
+  // feestje met hoedjes, ballonnen en een slinger
+  cherrytomaat(){
+    const slinger = `<path class="l" d="M30 160Q900 380 1770 160"/>` + [...Array(9)].map((_, i) => {
+      const t = (i + .5)/9, x = 30 + 1740*t, y = (1-t)*(1-t)*160 + 2*(1-t)*t*380 + t*t*160;
+      return `<path class="o" d="M${r1(x-40)} ${r1(y-4)}L${r1(x+40)} ${r1(y+4)}L${r1(x)} ${r1(y+80)}Z"/>`;
+    }).join('');
+    const fs = [[360, 270, 150, 30], [720, 250, 40, 160], [1080, 270, 30, 40], [1440, 255, 160, 20]].map(([x, h, aL, aR], i) =>
+      fig('cherrytomaat', {x, y:880 - (i%2)*20, h, aL, aR, benen: i%2 ? 'springen' : 'staan', hoed:'feest', hoedY:9}));
+    const ballon = (h, dx, dy) => `<path class="l" d="M${h[0]} ${h[1]}q${dx*.3} ${-dy*.5} ${dx} ${-dy}"/><ellipse class="o" cx="${h[0]+dx}" cy="${h[1]-dy-60}" rx="48" ry="60"/><path class="o" d="M${h[0]+dx-10} ${h[1]-dy+8}h20l-10-10z"/>`;
+    return slinger + plat(fs) + ballon(fs[0].handen.l, -40, 180) + ballon(fs[1].handen.r, 30, 170) + ballon(fs[3].handen.l, -30, 190);
+  },
+  // water geven met de gieter
+  aardbei(){
+    const g = fig('aardbei', {x:420, y:880, h:270, aL:30, naarR:[590, 560]});
+    const [hx, hy] = g.handen.r, rot = 25, c = Math.cos(rot*Math.PI/180), sn = Math.sin(rot*Math.PI/180);
+    const tip = [hx + 300*c + 62*sn, hy + 300*sn - 62*c];
+    const gieter = `<g transform="translate(${r1(hx)} ${r1(hy)}) rotate(${rot})"><path class="o" d="M10-60h150v120H10z"/><path class="l" d="M10-40q-50 0-50 40 0 40 50 40"/><path class="o" d="M160 20l130-90 14 18-130 92z"/><ellipse class="o" cx="300" cy="-62" rx="16" ry="30" transform="rotate(-35 300 -62)"/></g>`;
+    const druppels = [[20, 50], [-15, 95], [45, 120], [10, 150]].map(([dx, dy]) => kp.druppel(r1(tip[0]+dx), r1(tip[1]+dy), .9)).join('');
+    const a = fig('aardbei', {x:1230, y:880, h:250, benen:'springen', aL:150, aR:130});
+    const b = fig('aardbei', {x:1520, y:880, h:230, benen:'lopen', aL:20, aR:150});
+    return kp.bloem(r1(tip[0]+30), 880, r1(Math.max(110, 880 - tip[1] - 230)), 1.3) + g.svg + gieter + druppels + plat([a, b]);
+  },
+  // voetballen met een doeltje
+  framboos(){
+    const doel = `<path class="o" d="M1300 880V500H1700V880" style="fill:none"/>` + [1360, 1440, 1520, 1600, 1660].map(x => `<path class="d" d="M${x} 505V880"/>`).join('') + [580, 660, 740, 820].map(y => `<path class="d" d="M1305 ${y}H1695"/>`).join('') + `<path class="l" d="M1300 880V500H1700V880"/>`;
+    const k = fig('framboos', {x:520, y:880, h:260, benen:'schoppen', aL:120, aR:60});
+    const bal = `<g transform="translate(60 0)"><circle class="o" cx="820" cy="820" r="58"/><path class="o" d="M820 795l24 17-9 28h-30l-9-28z"/><path class="d" d="M820 762v33M844 812l30-10M835 840l18 28M805 840l-18 28M796 812l-30-10"/></g>`;
+    const kp2 = fig('framboos', {x:1500, y:880, h:240, benen:'wijd', aL:110, aR:110, hoed:'pet', hoedY:7.5});
+    const f = fig('framboos', {x:220, y:880, h:210, benen:'springen', aL:150, aR:150});
+    return doel + plat([f, k, kp2]) + bal;
+  },
+  // op de schommel
+  rodebes(){
+    const rek = `<path class="o" d="M300 880l90-640h30l-60 640zM1500 880l-90-640h-30l60 640z"/><rect class="o" x="330" y="220" width="1140" height="40" rx="12"/>`;
+    const touw = (x1, x2, y) => `<path class="l" d="M${x1} 260V${y}M${x2} 260V${y}"/><rect class="o" x="${x1-30}" y="${y}" width="${x2-x1+60}" height="26" rx="8"/>`;
+    const a = fig('rodebes', {x:690, y:700, h:220, zit:true, benen:'zitten', naarL:[600, 580], naarR:[780, 580]});
+    const b = fig('rodebes', {x:1120, y:650, h:220, zit:true, benen:'zitten', naarL:[1030, 530], naarR:[1210, 530]});
+    const c = fig('rodebes', {x:1640, y:885, h:200, aL:150, aR:30});
+    return rek + touw(600, 780, 700) + touw(1030, 1210, 650) + plat([a, b, c]);
+  },
+  // een vlieger oplaten
+  braam(){
+    const v = fig('braam', {x:520, y:880, h:260, benen:'lopen', aL:30, aR:150});
+    const h = v.handen.r, kx = 1350, ky = 330;
+    const vlieger = `<path class="l" d="M${h[0]} ${h[1]}Q${(h[0]+kx)/2} ${h[1]-40} ${kx} ${ky+150}"/><path class="o" d="M${kx} ${ky-150}l120 150-120 150-120-150z"/><path class="d" d="M${kx} ${ky-150}V${ky+150}M${kx-120} ${ky}H${kx+120}"/>` +
+      `<path class="l" d="M${kx} ${ky+150}q60 80 0 140q-60 60 20 140"/>` + [[kx+30, ky+235, 20], [kx-25, ky+340, -20], [kx+20, ky+430, 15]].map(([x, y, r]) => `<path class="o" transform="rotate(${r} ${x} ${y})" d="M${x} ${y}l-36-20v40zM${x} ${y}l36-20v40z"/>`).join('');
+    const a = fig('braam', {x:880, y:880, h:220, benen:'springen', aL:120, aR:155});
+    const b = fig('braam', {x:230, y:890, h:200, aL:20, aR:130});
+    return vlieger + plat([b, v, a]);
+  },
+  // gluren uit een emmer
+  blauwebes(){
+    const a = fig('blauwebes', {x:800, y:650, h:210, benen:'geen', naarL:[700, 612], naarR:[860, 612]});
+    const b = fig('blauwebes', {x:965, y:620, h:220, benen:'geen', aL:155, aR:155});
+    const c = fig('blauwebes', {x:1130, y:650, h:210, benen:'geen', naarL:[1060, 612], naarR:[1220, 612]});
+    const hengsel = `<path class="l" d="M640 610C600 250 1310 250 1270 610"/>`;
+    const emmer = `<path class="o" d="M620 600L1290 600 1230 880 680 880Z"/><ellipse class="o" cx="955" cy="600" rx="335" ry="34" style="fill:none"/><path class="d" d="M650 690H1265"/>`;
+    const handjes = [[700, 612], [860, 612], [1060, 612], [1220, 612]].map(([x, y]) => `<circle class="o" cx="${x}" cy="${y}" r="17"/>`).join('');
+    const schep = `<path class="o" transform="rotate(-25 1500 840)" d="M1490 640h22v170h-22zM1450 800h110l-10 90q-45 30-90 0z"/>`;
+    const d = fig('blauwebes', {x:340, y:880, h:230, benen:'lopen', aL:20, aR:130});
+    return hengsel + plat([a, b, c]) + emmer + handjes + schep + d.svg;
+  }
+};
+
+/* Het tafereel wordt bijgesneden tot wat er getekend is, zodat het zo groot mogelijk op de pagina past. */
+const KP_STIJL = `<style>.o{fill:#fff;stroke:${KP.INK};stroke-width:${KP.LW};stroke-linejoin:round;stroke-linecap:round}.l{fill:none;stroke:${KP.INK};stroke-width:${KP.LW};stroke-linecap:round;stroke-linejoin:round}.d{fill:none;stroke:${KP.INK};stroke-width:${KP.LW*.7};stroke-linecap:round}</style>`;
+function kleurplaat(id){
+  const t = TAFEREEL[id]; if (!t) return null;
+  const inhoud = t(), ns = 'http://www.w3.org/2000/svg', meet = document.createElementNS(ns, 'svg');
+  meet.setAttribute('style', 'position:absolute;left:-9999px;top:0;width:10px;height:10px;overflow:hidden');
+  meet.innerHTML = inhoud; document.body.appendChild(meet);
+  const b = meet.getBBox(); meet.remove();
+  const m = KP.LW*2, x = Math.floor(b.x - m), y = Math.floor(b.y - m), w = Math.ceil(b.width + 2*m), h = Math.ceil(b.height + 2*m);
+  return {w, h, svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x} ${y} ${w} ${h}" width="${w}" height="${h}">${KP_STIJL}<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff"/>${inhoud}</svg>`};
+}
+const KLEUR_PNG = {};
+function kleurplaatPng(id){
+  if (KLEUR_PNG[id] !== undefined) return Promise.resolve(KLEUR_PNG[id]);
+  const kp = kleurplaat(id);
+  if (!kp){ KLEUR_PNG[id] = null; return Promise.resolve(null); }
+  return new Promise(res => {
+    const img = new Image(), px = 1.5;
+    img.onload = () => { const c = document.createElement('canvas'); c.width = Math.round(kp.w*px); c.height = Math.round(kp.h*px);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); KLEUR_PNG[id] = {url: c.toDataURL('image/png'), w: kp.w, h: kp.h}; res(KLEUR_PNG[id]); };
+    img.onerror = () => { KLEUR_PNG[id] = null; res(null); };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(kp.svg);
+  });
+}
+
 /* ---------- PDF ---------- */
 const PC = {binnen:[211,161,31], buiten:[74,151,78], plant:[132,89,174], zorg:[164,123,85], water:[47,120,196], oogst:[208,83,44]};
 const INK=[28,42,32], MUT=[95,110,99], LIN=[214,223,211];
@@ -612,9 +972,9 @@ function schrijver(doc){
 
 function gewasPagina(doc, g){
   const w = schrijver(doc); w.y = 24;
-  pdfIcoon(doc, g.id, w.M + w.W - 18, 9, 18);
-  doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.setTextColor(...INK); doc.text(tx(g.naam), w.M, w.y);
-  doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(...MUT); doc.text(`${g.groep} - ${g.soort}`, w.M, w.y+7);
+  pdfIcoon(doc, g.id, w.M - 1, 13, 20);
+  doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.setTextColor(...INK); doc.text(tx(g.naam), w.M + 22, w.y);
+  doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(...MUT); doc.text(`${g.groep} - ${g.soort}`, w.M + 22, w.y+7);
   w.y += 15;
   const info = [['Zaai- of plantdiepte', g.diepte], ['Afstand', g.afstand], ['Water bij droogte', g.water], ['Tijd tot oogst', g.oogst]];
   doc.setFillColor(242,245,239); doc.roundedRect(w.M, w.y, w.W, 22, 2, 2, 'F');
@@ -625,29 +985,60 @@ function gewasPagina(doc, g){
   });
   w.y += 31;
   doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...INK); doc.text('Wat moet er per maand gebeuren?', w.M, w.y); w.y += 6;
+  /* Een taak krijgt zijn uitleg in de eerste maand; daarna staat hij onder 'Gaat door'.
+     Opeenvolgende maanden zonder werk komen op één regel. Zo past de kleurplaat er nog onder. */
+  const takenIn = m => g.taken.filter(([,a,b]) => m>=a && m<=b).sort((p,q) => ORDER.indexOf(p[0]) - ORDER.indexOf(q[0]));
+  const gezien = new Set(), sleutel = t => t[0] + '|' + t[3], X = w.M + 28;
   for (let m=1; m<=12; m++){
-    const taken = g.taken.filter(([,a,b]) => m>=a && m<=b).sort((p,q) => ORDER.indexOf(p[0]) - ORDER.indexOf(q[0]));
+    const taken = takenIn(m);
+    let label = cap(MAANDEN[m-1]);
+    if (!taken.length){ let e = m; while (e < 12 && !takenIn(e+1).length) e++; if (e > m) label = cap(KORT[m-1]) + ' t/m ' + KORT[e-1]; m = e; }
     w.ensure(10);
-    doc.setDrawColor(...LIN); doc.setLineWidth(0.2); doc.line(w.M, w.y, w.M+w.W, w.y); w.y += 4.6;
+    doc.setDrawColor(...LIN); doc.setLineWidth(0.2); doc.line(w.M, w.y, w.M+w.W, w.y); w.y += 4.4;
     const start = w.y;
-    doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(...INK); doc.text(cap(MAANDEN[m-1]), w.M, w.y);
+    doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(...INK); doc.text(label, w.M, w.y);
     if (!taken.length){
-      doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...MUT); doc.text('Geen werk aan dit gewas.', w.M+28, w.y); w.y += 2.4;
+      doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...MUT); doc.text('Geen werk aan dit gewas.', X, w.y); w.y += 2.4;
     } else {
-      taken.forEach(([t,,,uitleg], i) => {
+      const nieuw = taken.filter(t => !gezien.has(sleutel(t))), door = taken.filter(t => gezien.has(sleutel(t)));
+      nieuw.forEach(([t,,,uitleg], i) => {
         doc.setFont('helvetica','normal'); doc.setFontSize(9);
         const ls = doc.splitTextToSize(tx(uitleg), w.W-74);
         if (i) w.y += 1.2;
-        w.ensure(ls.length*3.9);
-        doc.setFillColor(...PC[t]); doc.roundedRect(w.M+28, w.y-2.2, 4.5, 2.3, 1.1, 1.1, 'F');
-        doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(...INK); doc.text(TYPES[t], w.M+34.5, w.y);
+        doc.setFillColor(...PC[t]); doc.roundedRect(X, w.y-2.2, 4.5, 2.3, 1.1, 1.1, 'F');
+        doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(...INK); doc.text(TYPES[t], X+6.5, w.y);
         doc.setFont('helvetica','normal'); doc.setFontSize(9);
         ls.forEach(l => { doc.text(l, w.M+74, w.y); w.y += 3.9; });
       });
+      if (door.length){
+        if (nieuw.length) w.y += 1.2;
+        doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...MUT); doc.text('Gaat door:', X, w.y);
+        let x = X + doc.getTextWidth('Gaat door:') + 3;
+        door.forEach(([t]) => {
+          doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+          const bw = 6.5 + doc.getTextWidth(TYPES[t]);
+          if (x + bw > w.M + w.W){ w.y += 3.9; x = X; }
+          doc.setFillColor(...PC[t]); doc.roundedRect(x, w.y-2.2, 4.5, 2.3, 1.1, 1.1, 'F');
+          doc.setTextColor(...INK); doc.text(TYPES[t], x+6.5, w.y); x += bw + 4.5;
+        });
+        w.y += 3.9;
+      }
+      nieuw.forEach(t => gezien.add(sleutel(t)));
       w.y -= 1.5;
     }
     w.y = Math.max(w.y, start+2.4) + 1.6;
   }
+  kleurplaatOpPagina(doc, g, w.y + 4);
+}
+
+/* Kleurplaat onderaan de gewaspagina, zo groot als de ruimte toelaat */
+function kleurplaatOpPagina(doc, g, top){
+  const kp = KLEUR_PNG[g.id]; if (!kp) return;
+  const M = 16, W = 178, BOT = 281, ruimte = BOT - top;
+  const s = Math.min(W / kp.w, ruimte / kp.h);
+  if (kp.h * s < 40) return;
+  const bw = kp.w * s, bh = kp.h * s;
+  doc.addImage(kp.url, 'PNG', M + (W - bw)/2, BOT - bh, bw, bh, 'kp-' + g.id, 'FAST');
 }
 
 function maandPagina(doc, mi, lijst){
@@ -719,7 +1110,7 @@ $('btn-pdf').addEventListener('click', async () => {
   if (!window.jspdf){ st.textContent = 'De PDF-module is niet geladen. Laad de pagina opnieuw.'; return; }
   knop.disabled = true; st.textContent = 'PDF wordt gemaakt...';
   try{
-    await iconPngs(); await ijsLabel();
+    await iconPngs(); await ijsLabel(); await Promise.all(gekozen().map(g => kleurplaatPng(g.id)));
     const pdf = bouwPdf();
     if (!window.claude?.use){ pdf.save('schooltuinkalender.pdf'); st.textContent = 'PDF opgeslagen.'; return; }
     const blob = pdf.output('blob');
