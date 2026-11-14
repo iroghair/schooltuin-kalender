@@ -15,7 +15,7 @@
   --bg:#F2F5EF; --surface:#FFFFFF; --ink:#1C2A20; --muted:#5A6A5E; --line:#D6DFD3;
   --accent:#2D6A3E; --accent-ink:#FFFFFF;
   --band:#24492F; --band-ink:#EDF5EC; --band-muted:#B9D0BC;
-  --c-binnen:#D3A11F; --c-buiten:#4A974E; --c-plant:#8459AE; --c-water:#2F78C4; --c-zorg:#A47B55; --c-oogst:#D0532C;
+  --c-binnen:#D3A11F; --c-buiten:#4A974E; --c-plant:#8459AE; --c-water:#2F78C4; --c-zorg:#C44F9B; --c-oogst:#D0532C;
   --f-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
   --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --nw:150px;
@@ -25,7 +25,7 @@
     --bg:#111914; --surface:#18221B; --ink:#E4EDE5; --muted:#9BAD9F; --line:#2B3A30;
     --accent:#7CC08B; --accent-ink:#0F1A12;
     --band:#173023; --band-ink:#E4EFE5; --band-muted:#9FBBA5;
-    --c-binnen:#E6B844; --c-buiten:#69B96D; --c-plant:#B48AD8; --c-water:#6CA8EC; --c-zorg:#C29A72; --c-oogst:#EC744E;
+    --c-binnen:#E6B844; --c-buiten:#69B96D; --c-plant:#B48AD8; --c-water:#6CA8EC; --c-zorg:#E57CBF; --c-oogst:#EC744E;
     color-scheme:dark;
   }
 }
@@ -33,7 +33,7 @@
   --bg:#111914; --surface:#18221B; --ink:#E4EDE5; --muted:#9BAD9F; --line:#2B3A30;
   --accent:#7CC08B; --accent-ink:#0F1A12;
   --band:#173023; --band-ink:#E4EFE5; --band-muted:#9FBBA5;
-  --c-binnen:#E6B844; --c-buiten:#69B96D; --c-plant:#B48AD8; --c-water:#6CA8EC; --c-zorg:#C29A72; --c-oogst:#EC744E;
+  --c-binnen:#E6B844; --c-buiten:#69B96D; --c-plant:#B48AD8; --c-water:#6CA8EC; --c-zorg:#E57CBF; --c-oogst:#EC744E;
   color-scheme:dark;
 }
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5}
@@ -98,7 +98,7 @@ h2{margin:0;font-weight:800;font-size:23px;line-height:1.2}
 .rname span{font-size:12.5px;color:var(--muted)}
 .rlanes{display:flex;flex-direction:column;justify-content:center;gap:4px;padding-block:10px;cursor:pointer}
 .lane{display:grid;grid-template-columns:repeat(12,1fr);height:9px}
-.bar{margin:0 3px;border-radius:99px;background:var(--c)}
+.bar{grid-row:1;margin:0 3px;border-radius:99px;background:var(--c)}
 .empty{display:block;padding:22px 14px;color:var(--muted)}
 .mfoot{height:34px}
 .labs{position:relative}
@@ -106,6 +106,38 @@ h2{margin:0;font-weight:800;font-size:23px;line-height:1.2}
 .lab-ijs{left:calc(4.42 * 100% / 12);color:var(--c-plant)}
 .lab-vak{left:calc(7.275 * 100% / 12)}
 .hint{margin:10px 0 0;font-size:14px;color:var(--muted)}
+
+/* Tabs per jaarlaag */
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 14px}
+.tab{display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:9px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);text-align:left;line-height:1.2;cursor:pointer}
+.tab b{font-size:15px}
+.tab small{font-size:12.5px;color:var(--muted)}
+.tab:hover{border-color:var(--accent)}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tab[aria-selected="true"] small{color:inherit;opacity:.85}
+.lai{width:22px;height:22px;flex:none}
+
+/* Raster: één vakje per groente per maand */
+.raster .rname{flex-direction:row;align-items:center;gap:9px}
+.raster .rname .ico{width:30px;height:30px;flex:none}
+.cellen{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;padding:5px 4px}
+.cel{aspect-ratio:1;min-width:0;border-radius:8px;border:1px solid var(--line);background:var(--bg);cursor:pointer;padding:4px}
+.cel.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface))}
+.cel:hover{border-color:var(--accent)}
+.cel .ai{display:block;width:100%;height:auto}
+.raster-kleuters{min-width:760px}
+.raster-kleuters .cel{display:grid;place-items:center;gap:2px}
+.raster-kleuters .cel.n1 .ai{width:78%}
+.raster-kleuters .cel.n2,.raster-kleuters .cel.n3,.raster-kleuters .cel.n4{grid-template-columns:1fr 1fr}
+.raster-midden{min-width:1000px}
+.raster-boven{min-width:1080px}
+.raster-midden .cel,.raster-boven .cel{display:flex;flex-direction:column;justify-content:center;gap:4px;padding:5px 3px;aspect-ratio:auto;min-height:72px}
+.ci{display:flex;align-items:center;gap:4px;min-width:0;font-size:11.5px;line-height:1.15;font-weight:700}
+.ci .ai{width:22px;flex:none}
+.raster-midden .cel.n1 .ci{flex-direction:column;text-align:center;gap:2px}
+.raster-midden .cel.n1 .ai{width:58%}
+.raster-boven .ci{font-weight:400;font-size:11px;align-items:flex-start}
+.raster-boven .ci .ai{width:16px}
 
 /* Month to-do */
 .mpills{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}
@@ -118,6 +150,7 @@ h2{margin:0;font-weight:800;font-size:23px;line-height:1.2}
 .group{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}
 .group h3{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-weight:800;font-size:17.5px}
 .group h3::before{content:"";flex:none;width:26px;height:10px;border-radius:99px;background:var(--c)}
+.group h3 .hai{width:28px;height:28px;flex:none;margin-left:-4px}
 .group h3 small{font-family:var(--f-body);font-weight:400;font-size:14px;color:var(--muted)}
 .group ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
 .group li{display:grid;gap:1px}
@@ -147,6 +180,7 @@ tbody tr:last-child td{border-bottom:0}
 .plancard .wanneer{margin:0 0 12px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
 .plancard h4{display:flex;align-items:center;gap:8px;margin:14px 0 8px;font-size:15px}
 .plancard h4::before{content:"";flex:none;width:22px;height:9px;border-radius:99px;background:var(--c)}
+.plancard h4 .hai{width:24px;height:24px;flex:none;margin-left:-2px}
 .plancard ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
 .plancard li{display:grid;gap:1px}
 .plancard li span{color:var(--muted);font-size:14.5px}
@@ -167,6 +201,10 @@ td .vn .ico{width:26px;height:26px}
   .chart{min-width:640px}
   .rname{padding-inline:10px}
   .corner{padding-inline:10px}
+  .tabs{grid-template-columns:1fr 1fr}
+  .chart.raster .rname{flex-direction:column;align-items:flex-start;gap:3px;padding-inline:8px}
+  .chart.raster .rname .ico{width:24px;height:24px}
+  .chart.raster .rname strong{font-size:13px;hyphens:auto}
   .top .wrap{flex-direction:column;align-items:stretch;gap:12px}
   .top-art{width:min(280px,100%);align-self:center;margin-block:0 -32px}
 }
@@ -194,11 +232,12 @@ td .vn .ico{width:26px;height:26px}
         <button type="button" class="primary" id="btn-pdf">PDF maken</button>
       </div>
     </div>
+    <div class="tabs" id="tabs" role="tablist" aria-label="Weergave per jaarlaag"></div>
     <ul class="legend" id="legenda"></ul>
     <div class="chart-scroll">
       <div class="chart" id="chart"></div>
     </div>
-    <p class="hint">Klik op een maand of in een rij om te zien wat je in die maand moet doen.</p>
+    <p class="hint" id="hint"></p>
   </section>
 
   <section aria-labelledby="kies-titel">
@@ -433,21 +472,65 @@ const ICON = {
   blauwebes: `<circle cx="16" cy="17" r="11" fill="#4a68c4"/><path d="M13 8l3 2 3-2-1 3 3 1-4 1-1 2-1-2-4-1 3-1z" fill="#2f4590"/><circle cx="10.5" cy="12.5" r="2" fill="#fff" opacity=".3"/>${gezicht(16,19,.95).replaceAll(OOG,'#1c2550')}`
 };
 const icoon = (id, cls = 'ico') => `<svg class="${cls}" viewBox="0 0 32 32" aria-hidden="true" focusable="false">${ICON[id] || ''}</svg>`;
+/* Actie-iconen voor het raster (kleuters, middenbouw, bovenbouw) */
+const ACTIE = {
+  binnen: `<path d="M7 14v13.5h18V14" fill="#fbeec4" stroke="#D3A11F" stroke-width="2.2" stroke-linejoin="round"/><path d="M3.5 15.5L16 5l12.5 10.5" stroke="#D3A11F" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 21.5v-4" stroke="#4a974e" stroke-width="1.4" stroke-linecap="round"/><path d="M16 18.5c-1-2-3-2.6-4.6-2.1.5 1.8 2.6 2.6 4.6 2.1zM16 18c1-2 3-2.6 4.6-2.1-.5 1.8-2.6 2.6-4.6 2.1z" fill="#5fa33f"/><path d="M11.8 21h8.4l-1.3 6.5h-5.8z" fill="#c8693c"/>`,
+  buiten: `<path d="M2.5 28c4-5.5 23-5.5 27 0z" fill="#8d6140"/><g transform="rotate(-35 10 10)"><rect x="5" y="2.5" width="10" height="13.5" rx="1.6" fill="#4A974E"/><rect x="7" y="6" width="6" height="5" rx="1" fill="#e4f2df"/><path d="M5 16h10" stroke="#2f6b33" stroke-width="1.2"/></g><g fill="#6b4a2b"><ellipse cx="17" cy="15.5" rx="1.1" ry=".75"/><ellipse cx="20.5" cy="18.5" rx="1.1" ry=".75"/><ellipse cx="17.5" cy="21" rx="1.1" ry=".75"/><ellipse cx="22.5" cy="22.5" rx="1.1" ry=".75"/></g>`,
+  plant: `<path d="M2.5 28.5c4-5.5 23-5.5 27 0z" fill="#8d6140"/><path d="M11 25.5v-8" stroke="#4a974e" stroke-width="1.7" stroke-linecap="round"/><path d="M11 19.5c-2-4-6-4.4-8-3.4 1 3 5 4.4 8 3.4zM11 18.5c2-4.2 6-5 8-4-1 3.2-5 5-8 4z" fill="#5fa33f"/><g transform="rotate(28 24 15)"><rect x="22.7" y="2.5" width="2.6" height="8.5" rx="1.3" fill="#8459AE"/><path d="M20.8 11h6.4v6c0 3.4-6.4 3.4-6.4 0z" fill="#aab0b8"/></g>`,
+  zorg: `<path d="M16 3v18" stroke="#C44F9B" stroke-width="2.4" stroke-linecap="round"/><path d="M6.5 21.5h19" stroke="#6f7680" stroke-width="2.6" stroke-linecap="round"/><path d="M7.5 22v5.5M11.7 22v5.5M16 22v5.5M20.3 22v5.5M24.5 22v5.5" stroke="#6f7680" stroke-width="1.7" stroke-linecap="round"/><path d="M26 11c-1.5-3-4-3.5-5.5-3 .3 2 2.5 3.4 5.5 3z" fill="#5fa33f"/>`,
+  water: `<path d="M9.5 13c0-6 9-6 9 0" stroke="#2F78C4" stroke-width="2.2" fill="none"/><path d="M19.5 22.5l7-8.5" stroke="#2F78C4" stroke-width="2.6" stroke-linecap="round"/><ellipse cx="27.4" cy="13" rx="1.7" ry="2.6" transform="rotate(40 27.4 13)" fill="#2F78C4"/><path d="M6.5 13h14v12.5a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2z" fill="#2F78C4"/><rect x="8.6" y="15.5" width="2.6" height="8" rx="1.3" fill="#fff" opacity=".35"/><g fill="#6ca8ec"><path d="M28.8 18c1 1.6 1.6 2.4 1.6 3.2a1.6 1.6 0 0 1-3.2 0c0-.8.6-1.6 1.6-3.2zM25.4 22.6c.9 1.4 1.4 2.1 1.4 2.8a1.4 1.4 0 0 1-2.8 0c0-.7.5-1.4 1.4-2.8z"/></g>`,
+  oogst: `<path d="M8 16.5c0-10.5 16-10.5 16 0" stroke="#9a4a22" stroke-width="2" fill="none"/><path d="M22 15.5l5.5-8.5" stroke="#f28c28" stroke-width="3.4" stroke-linecap="round"/><path d="M27.5 7l1.8-2.6M27.5 7l2.6-.8" stroke="#5aa23b" stroke-width="1.3" stroke-linecap="round"/><circle cx="18.5" cy="13.5" r="4.4" fill="#7cbf3d"/><circle cx="11.5" cy="14" r="4" fill="#e8402f"/><path d="M3.5 16h25l-3 10.8a2 2 0 0 1-2 1.5H8.5a2 2 0 0 1-2-1.5z" fill="#d0682f"/><path d="M5.5 20.5h21M6.6 24.5h18.8" stroke="#9a4a22" stroke-width="1.1"/>`
+};
+const actie = (t, cls = 'ai') => `<svg class="${cls}" viewBox="0 0 32 32" aria-hidden="true" focusable="false">${ACTIE[t]}</svg>`;
+
+/* Weergaven per jaarlaag. 'leerkracht' is het balkenschema, de andere drie zijn een raster. */
+const WEERGAVEN = {
+  leerkracht: {naam:'Leerkracht', sub:'balken per taak', pdf:'leerkracht',
+    hint:'Klik op een maand of in een rij om te zien wat je in die maand moet doen.'},
+  kleuters: {naam:'Kleuters', sub:'groep 1 en 2', pdf:'kleuters (groep 1 en 2)',
+    hint:'Elk vakje is een maand. De plaatjes laten zien wat we met de groente doen. Klik op een vakje om die maand te bekijken.'},
+  midden: {naam:'Middenbouw', sub:'groep 3, 4 en 5', pdf:'middenbouw (groep 3, 4 en 5)',
+    hint:'Elk vakje is een maand, met een plaatje en een woord voor wat je doet. Klik op een vakje om die maand te bekijken.'},
+  boven: {naam:'Bovenbouw', sub:'groep 6, 7 en 8', pdf:'bovenbouw (groep 6, 7 en 8)',
+    hint:'Elk vakje is een maand. Klik op een vakje om te lezen wat je in die maand precies doet.'}
+};
+const WOORD = {binnen:'binnen zaaien', buiten:'zaaien', plant:'planten', zorg:'zorgen', water:'water geven', oogst:'oogsten'};
+const KEY_W = 'schooltuinkalender.weergave.v1';
+let weergave = (() => { try{ const v = localStorage.getItem(KEY_W); if (WEERGAVEN[v]) return v; }catch(e){} return 'leerkracht'; })();
+/* Welke soorten taken een gewas in maand m (1-12) heeft, in vaste volgorde */
+const soortenIn = (g, m) => ORDER.filter(t => g.taken.some(([ty,a,b]) => ty === t && m >= a && m <= b));
+
 const ICON_PNG = {};
 function iconPngs(){
-  return Promise.all(Object.keys(ICON).map(id => new Promise(res => {
+  const bronnen = {...ICON}; ORDER.forEach(t => bronnen['a-' + t] = ACTIE[t]);
+  return Promise.all(Object.keys(bronnen).map(id => new Promise(res => {
     if (ICON_PNG[id]) return res();
     const img = new Image();
     img.onload = () => { const c = document.createElement('canvas'); c.width = c.height = 128;
       c.getContext('2d').drawImage(img, 0, 0, 128, 128); ICON_PNG[id] = c.toDataURL('image/png'); res(); };
     img.onerror = () => res();
-    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="128" height="128">${ICON[id]}</svg>`);
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="128" height="128">${bronnen[id]}</svg>`);
   })));
 }
-const pdfIcoon = (doc, id, x, y, s) => { if (ICON_PNG[id]) doc.addImage(ICON_PNG[id], 'PNG', x, y, s, s); };
+const pdfIcoon = (doc, id, x, y, s) => { if (ICON_PNG[id]) doc.addImage(ICON_PNG[id], 'PNG', x, y, s, s, 'ic-' + id, 'FAST'); };
+const pdfActie = (doc, t, x, y, s) => pdfIcoon(doc, 'a-' + t, x, y, s);
 
 /* Static parts */
-$('legenda').innerHTML = ORDER.map(t => `<li><span class="sw" style="--c:var(--c-${t})"></span>${TYPES[t]}</li>`).join('');
+function tekenLegenda(){
+  $('legenda').innerHTML = ORDER.map(t => weergave === 'leerkracht'
+    ? `<li><span class="sw" style="--c:var(--c-${t})"></span>${TYPES[t]}</li>`
+    : `<li>${actie(t, 'lai')}${weergave === 'midden' ? WOORD[t] : TYPES[t]}</li>`).join('');
+}
+function tekenTabs(){
+  $('tabs').innerHTML = Object.entries(WEERGAVEN).map(([k, w]) =>
+    `<button type="button" role="tab" class="tab" id="tab-${k}" data-w="${k}" aria-selected="${k === weergave}" aria-controls="chart" tabindex="${k === weergave ? 0 : -1}"><b>${w.naam}</b><small>${w.sub}</small></button>`).join('');
+}
+function kiesWeergave(w, focus){
+  weergave = w; try{ localStorage.setItem(KEY_W, w); }catch(e){}
+  tekenTabs(); tekenLegenda(); tekenKalender(); tekenMaand();
+  $('hint').textContent = WEERGAVEN[w].hint;
+  if (focus) $('tab-' + w).focus();
+}
 $('chips').innerHTML = ['Groenten','Fruit'].map(gr => `<div class="chipset"><h3>${gr}</h3><div class="chips">${VEG.filter(g => g.groep === gr).map(g =>
   `<button type="button" class="chip" id="chip-${g.id}" data-id="${g.id}" aria-pressed="false">${icoon(g.id)}${g.naam}</button>`).join('')}</div></div>`).join('');
 $('mpills').innerHTML = KORT.map((k,i) => `<button type="button" class="mpill${i===NU?' is-now':''}" id="mpill-${i}" data-m="${i}" aria-pressed="false" aria-label="${MAANDEN[i]}${i===NU?' (deze maand)':''}">${k}</button>`).join('');
@@ -459,6 +542,8 @@ function tekenKeuze(){
 }
 
 function tekenKalender(){
+  $('chart').className = 'chart' + (weergave === 'leerkracht' ? '' : ' raster raster-' + weergave);
+  if (weergave !== 'leerkracht') return tekenRaster();
   const lijst = gekozen();
   const kop = `<div class="mhead"><div class="corner">Groente</div><div class="months">${KORT.map((k,i) =>
     `<button type="button" class="mbtn" id="mbtn-${i}" data-m="${i}" aria-pressed="${i===maand}" aria-label="${MAANDEN[i]}"><span>${k}</span><span class="now">${i===NU?'nu':''}</span></button>`).join('')}</div></div>`;
@@ -468,9 +553,22 @@ function tekenKalender(){
       `<div class="lane">${g.taken.filter(x => x[0] === t).map(([ty,a,b]) =>
         `<span class="bar" style="grid-column:${a} / ${b+1};--c:var(--c-${ty})" title="${TYPES[ty]}: ${periode(a,b)}"></span>`).join('')}</div>`).join('');
     return `<div class="row"><div class="rname">${icoon(g.id)}<div class="rtxt"><strong>${g.naam}</strong><span>${g.soort}</span></div></div><div class="rlanes">${banen}</div></div>`;
-  }).join('') : `<div class="row empty">Kies hierboven een of meer groenten om ze in de kalender te zien.</div>`;
+  }).join('') : `<div class="row empty">Kies hieronder een of meer groenten om ze in de kalender te zien.</div>`;
   const voet = `<div class="mfoot"><div></div><div class="labs"><span class="lab lab-ijs">Ĳsheiligen 11–15 mei</span><span class="lab lab-vak">zomervakantie</span></div></div>`;
   $('chart').innerHTML = laag + kop + rijen + voet;
+}
+
+function tekenRaster(){
+  const lijst = gekozen();
+  const kop = `<div class="mhead"><div class="corner">Groente</div><div class="months">${KORT.map((k,i) =>
+    `<button type="button" class="mbtn" id="mbtn-${i}" data-m="${i}" aria-pressed="${i===maand}" aria-label="${MAANDEN[i]}"><span>${k}</span><span class="now">${i===NU?'nu':''}</span></button>`).join('')}</div></div>`;
+  const inhoud = t => weergave === 'kleuters' ? actie(t)
+    : `<span class="ci">${actie(t)}<span>${weergave === 'midden' ? WOORD[t] : TYPES[t]}</span></span>`;
+  const rijen = lijst.length ? lijst.map(g => `<div class="row"><div class="rname">${icoon(g.id)}<div class="rtxt"><strong>${g.naam}</strong>${weergave === 'kleuters' ? '' : `<span>${g.soort}</span>`}</div></div><div class="cellen">${
+    KORT.map((_, i) => { const ts = soortenIn(g, i+1);
+      return `<div class="cel n${Math.min(ts.length, 4)}${i === maand ? ' sel' : ''}" data-m="${i}" role="img" aria-label="${g.naam}, ${MAANDEN[i]}: ${ts.length ? ts.map(t => TYPES[t].toLowerCase()).join(', ') : 'niets te doen'}">${ts.map(inhoud).join('')}</div>`; }).join('')
+  }</div></div>`).join('') : `<div class="row empty">Kies hieronder een of meer groenten om ze in de kalender te zien.</div>`;
+  $('chart').innerHTML = kop + rijen;
 }
 
 function tekenMaand(){
@@ -478,6 +576,7 @@ function tekenMaand(){
   document.querySelectorAll('.mpill').forEach(p => p.setAttribute('aria-pressed', +p.dataset.m === maand));
   document.querySelectorAll('.mbtn').forEach(b => b.setAttribute('aria-pressed', +b.dataset.m === maand));
   const col = $('selcol'); if (col) col.style.setProperty('--m', maand);
+  document.querySelectorAll('.cel').forEach(c => c.classList.toggle('sel', +c.dataset.m === maand));
 
   const m = maand + 1;
   const groepen = {};
@@ -486,7 +585,7 @@ function tekenMaand(){
   }));
   let html = ORDER.filter(t => groepen[t]).map(t => `
     <div class="group" style="--c:var(--c-${t})">
-      <h3>${TYPES[t]} <small>${groepen[t].length}</small></h3>
+      <h3>${actie(t, 'hai')}${TYPES[t]} <small>${groepen[t].length}</small></h3>
       <ul>${groepen[t].map(i => `<li><b class="vn">${icoon(i.id)}${i.naam}</b><span>${i.uitleg}</span></li>`).join('')}</ul>
     </div>`).join('');
   if (!html){
@@ -513,7 +612,7 @@ function tekenPlan(){
       const items = [];
       VEG.forEach(g => g.taken.forEach(([ty,a,b,u]) => { if (ty===t && m>=a && m<=b) items.push({g,u}); }));
       if (!items.length) return '';
-      return `<h4 style="--c:var(--c-${t})">${TYPES[t]}</h4><ul>${items.map(({g,u}) =>
+      return `<h4 style="--c:var(--c-${t})">${actie(t, 'hai')}${TYPES[t]}</h4><ul>${items.map(({g,u}) =>
         `<li><b class="vn">${icoon(g.id)}${g.naam}${keuze.has(g.id)?'<span class="badge">gekozen</span>':''}</b><span>${u}</span></li>`).join('')}</ul>`;
     }).join('');
     return `<div class="plancard"><p class="wanneer">${k ? 'Volgende maand' : 'Deze maand'}</p><h3>${MAANDEN[mi].charAt(0).toUpperCase()+MAANDEN[mi].slice(1)}</h3>${
@@ -535,6 +634,8 @@ $('mpills').addEventListener('click', e => { const p = e.target.closest('.mpill'
 $('chart').addEventListener('click', e => {
   const b = e.target.closest('.mbtn');
   if (b) return kiesMaand(+b.dataset.m);
+  const c = e.target.closest('.cel');
+  if (c) return kiesMaand(+c.dataset.m);
   const r = e.target.closest('.rlanes');
   if (r){
     const box = r.getBoundingClientRect();
@@ -903,7 +1004,7 @@ function kleurplaatPng(id){
 }
 
 /* ---------- PDF ---------- */
-const PC = {binnen:[211,161,31], buiten:[74,151,78], plant:[132,89,174], zorg:[164,123,85], water:[47,120,196], oogst:[208,83,44]};
+const PC = {binnen:[211,161,31], buiten:[74,151,78], plant:[132,89,174], zorg:[196,79,155], water:[47,120,196], oogst:[208,83,44]};
 const INK=[28,42,32], MUT=[95,110,99], LIN=[214,223,211];
 const tx = s => String(s).replace(/Ĳ/g,'IJ').replace(/ĳ/g,'ij').replace(/[–—]/g,'-').replace(/[‘’]/g,"'").replace(/[“”]/g,'"');
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
@@ -970,20 +1071,30 @@ function schrijver(doc){
   return o;
 }
 
-function gewasPagina(doc, g){
-  const w = schrijver(doc); w.y = 24;
-  pdfIcoon(doc, g.id, w.M - 1, 13, 20);
-  doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.setTextColor(...INK); doc.text(tx(g.naam), w.M + 22, w.y);
-  doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(...MUT); doc.text(`${g.groep} - ${g.soort}`, w.M + 22, w.y+7);
-  w.y += 15;
-  const info = [['Zaai- of plantdiepte', g.diepte], ['Afstand', g.afstand], ['Water bij droogte', g.water], ['Tijd tot oogst', g.oogst]];
-  doc.setFillColor(242,245,239); doc.roundedRect(w.M, w.y, w.W, 22, 2, 2, 'F');
+/* Kop van een gewaspagina: icoon, naam en soort. Geeft de y eronder terug. */
+function kopGewas(doc, g){
+  const M = 16, y = 24;
+  pdfIcoon(doc, g.id, M - 1, 13, 20);
+  doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.setTextColor(...INK); doc.text(tx(g.naam), M + 22, y);
+  doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(...MUT); doc.text(`${g.groep} - ${g.soort}`, M + 22, y+7);
+  return y + 15;
+}
+/* Grijs blok met plantgegevens, twee per regel. Geeft de y eronder terug. */
+function infoBlok(doc, info, y){
+  const M = 16, W = 178, h = 4 + Math.ceil(info.length/2)*9;
+  doc.setFillColor(242,245,239); doc.roundedRect(M, y, W, h, 2, 2, 'F');
   info.forEach(([k,v],i) => {
-    const x = w.M + 5 + (i%2)*89, yy = w.y + 7 + Math.floor(i/2)*9;
+    const x = M + 5 + (i%2)*89, yy = y + 7 + Math.floor(i/2)*9;
     doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(...MUT); doc.text(k.toUpperCase(), x, yy);
     doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(...INK); doc.text(doc.splitTextToSize(tx(v), 82)[0], x, yy+4.2);
   });
-  w.y += 31;
+  return y + h;
+}
+const INFO_VOL = g => [['Zaai- of plantdiepte', g.diepte], ['Afstand', g.afstand], ['Water bij droogte', g.water], ['Tijd tot oogst', g.oogst]];
+
+function gewasPagina(doc, g){
+  const w = schrijver(doc);
+  w.y = infoBlok(doc, INFO_VOL(g), kopGewas(doc, g)) + 9;
   doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...INK); doc.text('Wat moet er per maand gebeuren?', w.M, w.y); w.y += 6;
   /* Een taak krijgt zijn uitleg in de eerste maand; daarna staat hij onder 'Gaat door'.
      Opeenvolgende maanden zonder werk komen op één regel. Zo past de kleurplaat er nog onder. */
@@ -1041,7 +1152,7 @@ function kleurplaatOpPagina(doc, g, top){
   doc.addImage(kp.url, 'PNG', M + (W - bw)/2, BOT - bh, bw, bh, 'kp-' + g.id, 'FAST');
 }
 
-function maandPagina(doc, mi, lijst){
+function maandPagina(doc, mi, lijst, v){
   const w = schrijver(doc), m = mi+1; w.y = 24;
   doc.setFont('helvetica','bold'); doc.setFontSize(24); doc.setTextColor(...INK); doc.text(cap(MAANDEN[mi]), w.M, w.y);
   doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(...MUT); doc.text('Wat moet er deze maand gebeuren in de schooltuin?', w.M, w.y+7);
@@ -1057,7 +1168,8 @@ function maandPagina(doc, mi, lijst){
     const items = []; lijst.forEach(g => g.taken.forEach(([ty,a,b,u]) => { if (ty===t && m>=a && m<=b) items.push([g.naam,u,g.id]); }));
     if (!items.length) return; iets = true;
     w.ensure(16);
-    doc.setFillColor(...PC[t]); doc.roundedRect(w.M, w.y-3.4, 9, 3.6, 1.8, 1.8, 'F');
+    if (v === 'boven') pdfActie(doc, t, w.M, w.y-5.4, 7.5);
+    else { doc.setFillColor(...PC[t]); doc.roundedRect(w.M, w.y-3.4, 9, 3.6, 1.8, 1.8, 'F'); }
     doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...INK); doc.text(`${TYPES[t]} (${items.length})`, w.M+12, w.y);
     w.y += 7;
     items.forEach(([naam,u,id]) => {
@@ -1073,6 +1185,178 @@ function maandPagina(doc, mi, lijst){
     w.y += 4;
   });
   if (!iets){ w.lines('Voor de gekozen gewassen is er deze maand niets te doen.', w.M, w.W, 10, 'normal', MUT, 5); w.y += 4; }
+}
+
+/* ---------- PDF: rasterweergaven voor kleuters, middenbouw en bovenbouw ---------- */
+const RLIJN = 0.3528 * 1.18;                       // regelhoogte in mm per punt lettergrootte
+const vakLabel = (v, t) => v === 'midden' ? WOORD[t] : TYPES[t];
+/* Maat van de lijstweergave (icoon + woorden) in een vakje van w mm breed */
+function vakLijst(doc, v, ts, w){
+  const sc = Math.min(w / 17.4, 1.5), fs = (v === 'midden' ? 6.8 : 5.7) * sc, ic = (v === 'midden' ? 3.9 : 3.1) * sc, lh = fs * RLIJN, gap = .9 * sc;
+  doc.setFont('helvetica', v === 'midden' ? 'bold' : 'normal'); doc.setFontSize(fs);
+  const items = ts.map(t => { const ls = doc.splitTextToSize(tx(vakLabel(v, t)), w - ic - 2.2*sc); return {t, ls, h: Math.max(ic, ls.length*lh)}; });
+  return {sc, fs, ic, lh, gap, items, h: items.reduce((a, i) => a + i.h, 0) + gap*(items.length - 1)};
+}
+function vakHoogte(doc, v, ts, w){
+  if (!ts.length || v === 'kleuters' || (v === 'midden' && ts.length === 1)) return 0;
+  return vakLijst(doc, v, ts, w).h + 2;
+}
+/* Tekent de acties ts in het vakje x, y, w, h */
+function vakInhoud(doc, v, ts, x, y, w, h){
+  if (!ts.length) return;
+  if (v === 'kleuters'){
+    if (ts.length === 1){ const s = Math.min(w, h)*.74; pdfActie(doc, ts[0], x + (w-s)/2, y + (h-s)/2, s); return; }
+    /* naast elkaar of in een blok van 2 × 2: wat de grootste iconen geeft */
+    const n = ts.length, g = Math.min(w, h)*.04;
+    const sRij = Math.min(h*.78, (w - (n+1)*g)/n), sBlok = Math.min((w - 3*g)/2, (h - 3*g)/2);
+    const perRij = sRij >= sBlok ? n : 2, s = Math.max(sRij, sBlok), rijen = Math.ceil(n/perRij), th = rijen*s + (rijen-1)*g;
+    ts.forEach((t, i) => {
+      const r = Math.floor(i/perRij), inRij = Math.min(perRij, n - r*perRij), tw = inRij*s + (inRij-1)*g;
+      pdfActie(doc, t, x + (w-tw)/2 + (i%perRij)*(s+g), y + (h-th)/2 + r*(s+g), s);
+    });
+    return;
+  }
+  if (v === 'midden' && ts.length === 1){
+    const sc = w/17.4, s = Math.min(w, h)*.52, fs = 7*sc, lh = fs*RLIJN;
+    doc.setFont('helvetica','bold'); doc.setFontSize(fs); doc.setTextColor(...INK);
+    const ls = doc.splitTextToSize(tx(WOORD[ts[0]]), w - 2), th = s + 1 + ls.length*lh, y0 = y + (h - th)/2;
+    pdfActie(doc, ts[0], x + (w-s)/2, y0, s);
+    ls.forEach((l, i) => doc.text(l, x + w/2, y0 + s + 1 + lh*(i + .8), {align:'center'}));
+    return;
+  }
+  const L = vakLijst(doc, v, ts, w); let cy = y + (h - L.h)/2;
+  doc.setTextColor(...INK);
+  L.items.forEach(it => {
+    pdfActie(doc, it.t, x + .9*L.sc, cy + (it.h - L.ic)/2, L.ic);
+    const ty = cy + (it.h - it.ls.length*L.lh)/2 + L.lh*.78;
+    it.ls.forEach((l, i) => doc.text(l, x + L.ic + 1.8*L.sc, ty + i*L.lh));
+    cy += it.h + L.gap;
+  });
+}
+function vakje(doc, x, y, w, h){
+  doc.setFillColor(247,249,245); doc.setDrawColor(...LIN); doc.setLineWidth(0.25);
+  doc.roundedRect(x, y, w, h, 1.6, 1.6, 'FD');
+}
+function pdfLegendaIconen(doc, v, x, y, max){
+  const x0 = x;
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...INK);
+  ORDER.forEach(t => {
+    const lab = vakLabel(v, t), bw = 6.5 + doc.getTextWidth(lab) + 5;
+    if (x + bw - 6 > max){ x = x0; y += 6.5; }
+    pdfActie(doc, t, x, y - 4, 5); doc.text(lab, x + 6.5, y); x += bw;
+  });
+}
+
+function rasterOverzicht(doc, lijst, v){
+  const L=12, X0=62, X1=285, CW=(X1-X0)/12, TOP=40, BOT=196, P=.55;
+  const rijen = lijst.map(g => {
+    const per = KORT.map((_, i) => soortenIn(g, i+1));
+    return {g, per, h: Math.max(CW, ...per.map(ts => vakHoogte(doc, v, ts, CW - 2*P) + 2*P))};
+  });
+  const paginas=[[]]; let y=TOP+8;
+  rijen.forEach(r => { if (y + r.h > BOT && paginas.at(-1).length){ paginas.push([]); y=TOP+8; } paginas.at(-1).push(r); y+=r.h; });
+  paginas.forEach((rs, pi) => {
+    if (pi>0) doc.addPage('a4','landscape');
+    doc.setTextColor(...INK); doc.setFont('helvetica','bold'); doc.setFontSize(20);
+    doc.text(pi ? 'Jaaroverzicht (vervolg)' : 'Schooltuinkalender - jaaroverzicht', L, 18);
+    doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...MUT);
+    doc.text(tx(`Voor ${WEERGAVEN[v].pdf}. ${lijst.length} gewassen gekozen. Elk vakje is een maand.`), L, 25);
+    pdfLegendaIconen(doc, v, L, 33, X1);
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...INK);
+    KORT.forEach((k,i) => doc.text(k, X0 + i*CW + CW/2, TOP+5.2, {align:'center'}));
+    let ry = TOP+8;
+    rs.forEach(r => {
+      const is = v === 'kleuters' ? 11 : 8.5;
+      pdfIcoon(doc, r.g.id, L, ry + r.h/2 - is/2, is);
+      doc.setFont('helvetica','bold'); doc.setFontSize(v === 'kleuters' ? 10.5 : 9.5); doc.setTextColor(...INK);
+      const ls = doc.splitTextToSize(tx(r.g.naam), X0 - L - is - 3.5);
+      const nh = ls.length*4 + (v === 'kleuters' ? 0 : 3.4);
+      ls.forEach((l, i) => doc.text(l, L + is + 2.5, ry + r.h/2 - nh/2 + 3 + i*4));
+      if (v !== 'kleuters'){ doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(...MUT); doc.text(r.g.soort, L + is + 2.5, ry + r.h/2 - nh/2 + 3 + ls.length*4 - .4); }
+      r.per.forEach((ts, i) => {
+        const x = X0 + i*CW + P, y = ry + P, w = CW - 2*P, h = r.h - 2*P;
+        vakje(doc, x, y, w, h); vakInhoud(doc, v, ts, x, y, w, h);
+      });
+      ry += r.h;
+    });
+  });
+}
+
+/* Gewaspagina voor de rasterweergaven: maandstrook van 3 rijen × 4 vakjes en de kleurplaat */
+function gewasPaginaRaster(doc, g, v){
+  const M = 16, W = 178, GAP = 3, CW = (W - 3*GAP)/4, VH = v === 'kleuters' ? 26 : 20;
+  let y = kopGewas(doc, g);
+  if (v === 'midden') y = infoBlok(doc, [['Zo diep zaai of plant je', g.diepte], ['Je kunt oogsten na', g.oogst]], y) + 4;
+  if (v === 'boven') y = infoBlok(doc, INFO_VOL(g), y) + 4;
+  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...INK);
+  doc.text(v === 'kleuters' ? 'Wat doen we in de tuin?' : 'Wat doe je in welke maand?', M, y + 5); y += 8;
+  for (let r = 0; r < 3; r++){
+    const ms = [0,1,2,3].map(c => r*4 + c), per = ms.map(m => soortenIn(g, m+1));
+    const h = Math.max(VH, ...per.map(ts => vakHoogte(doc, v, ts, CW) + 1));
+    ms.forEach((m, c) => {
+      const x = M + c*(CW + GAP);
+      doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(...INK);
+      doc.text(cap(MAANDEN[m]), x + CW/2, y + 3.6, {align:'center'});
+      vakje(doc, x, y + 5.5, CW, h); vakInhoud(doc, v, per[c], x, y + 5.5, CW, h);
+    });
+    y += 5.5 + h + 3;
+  }
+  if (v === 'boven'){
+    y += 4;
+    doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...INK); doc.text('Zo doe je het', M, y); y += 6;
+    const taken = [...g.taken].sort((p, q) => ORDER.indexOf(p[0]) - ORDER.indexOf(q[0]) || p[1] - q[1]);
+    taken.forEach(([t, a, b, uitleg]) => {
+      doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+      const ls = doc.splitTextToSize(tx(uitleg), W - 62);
+      pdfActie(doc, t, M, y - 4, 5.5);
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...INK); doc.text(TYPES[t], M + 7.5, y);
+      doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...MUT); doc.text(tx(periode(a, b)), M + 7.5, y + 3.8);
+      doc.setFontSize(9.5); doc.setTextColor(...INK);
+      ls.forEach((l, i) => doc.text(l, M + 62, y + i*4.2));
+      y += Math.max(8.2, ls.length*4.2 + 1.6);
+    });
+  }
+  kleurplaatOpPagina(doc, g, y + 4);
+}
+
+/* Maandpagina voor kleuters en middenbouw: per groente een kaartje met wat er te doen is */
+function maandPaginaRaster(doc, mi, lijst, v){
+  const M = 16, W = 178, GAP = 3, KW = (W - GAP)/2, BOT = 281;
+  doc.setFont('helvetica','bold'); doc.setFontSize(26); doc.setTextColor(...INK); doc.text(cap(MAANDEN[mi]), M, 25);
+  doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(...MUT);
+  doc.text(v === 'kleuters' ? 'Wat doen we deze maand in de tuin?' : 'Wat doen we deze maand in de schooltuin?', M, 32);
+  pdfLegendaIconen(doc, v, M, 41, M + W);
+  const items = lijst.map(g => ({g, ts: soortenIn(g, mi+1)})).filter(i => i.ts.length);
+  let y = 50;
+  if (!items.length){
+    doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(...INK);
+    doc.text('Deze maand rust de tuin. Er is niets te doen.', M, y + 8); return;
+  }
+  const hoogte = it => v === 'kleuters' ? 20 : 12 + Math.ceil(it.ts.length/2)*9;
+  for (let i = 0; i < items.length; i += 2){
+    const paar = items.slice(i, i+2), h = Math.max(...paar.map(hoogte));
+    if (y + h > BOT){ doc.addPage('a4','portrait'); y = 20; }
+    paar.forEach((it, k) => {
+      const x = M + k*(KW + GAP);
+      doc.setFillColor(247,249,245); doc.setDrawColor(...LIN); doc.setLineWidth(0.3); doc.roundedRect(x, y, KW, h, 2.5, 2.5, 'FD');
+      if (v === 'kleuters'){
+        pdfIcoon(doc, it.g.id, x + 4.5, y + 1.8, 12);
+        doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(...INK);
+        doc.text(doc.splitTextToSize(tx(it.g.naam.replace(/ \(.*\)$/, '')), 20)[0], x + 10.5, y + 17.6, {align:'center'});
+        doc.setDrawColor(...LIN); doc.line(x + 21, y + 3, x + 21, y + h - 3);
+        it.ts.forEach((t, j) => pdfActie(doc, t, x + 23.5 + j*15.5, y + (h - 14)/2, 14));
+      } else {
+        pdfIcoon(doc, it.g.id, x + 3, y + 3, 12);
+        doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...INK); doc.text(tx(it.g.naam), x + 18, y + 7.5);
+        doc.setFontSize(9);
+        it.ts.forEach((t, j) => {
+          const cx = x + 18 + (j%2)*33, cy = y + 11 + Math.floor(j/2)*9;
+          pdfActie(doc, t, cx, cy, 7.5); doc.text(WOORD[t], cx + 9, cy + 5);
+        });
+      }
+    });
+    y += h + GAP;
+  }
 }
 
 let IJS_PNG = null;
@@ -1091,16 +1375,19 @@ async function ijsLabel(){
 function bouwPdf(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({orientation:'landscape', unit:'mm', format:'a4'});
-  const lijst = gekozen();
-  overzicht(doc, lijst);
-  lijst.forEach(g => { doc.addPage('a4','portrait'); gewasPagina(doc, g); });
-  for (let i=0;i<12;i++){ doc.addPage('a4','portrait'); maandPagina(doc, i, lijst); }
+  const lijst = gekozen(), v = weergave;
+  if (v === 'leerkracht') overzicht(doc, lijst); else rasterOverzicht(doc, lijst, v);
+  lijst.forEach(g => { doc.addPage('a4','portrait'); v === 'leerkracht' ? gewasPagina(doc, g) : gewasPaginaRaster(doc, g, v); });
+  for (let i=0;i<12;i++){
+    doc.addPage('a4','portrait');
+    v === 'kleuters' || v === 'midden' ? maandPaginaRaster(doc, i, lijst, v) : maandPagina(doc, i, lijst, v);
+  }
   const n = doc.getNumberOfPages();
   for (let i=1;i<=n;i++){
     doc.setPage(i);
     const pw = doc.internal.pageSize.getWidth(), ph = doc.internal.pageSize.getHeight();
     doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...MUT);
-    doc.text('Schooltuinkalender', 12, ph-8); doc.text(`Pagina ${i} van ${n}`, pw-12, ph-8, {align:'right'});
+    doc.text(v === 'leerkracht' ? 'Schooltuinkalender' : `Schooltuinkalender - ${WEERGAVEN[v].naam.toLowerCase()}`, 12, ph-8); doc.text(`Pagina ${i} van ${n}`, pw-12, ph-8, {align:'right'});
   }
   return doc;
 }
@@ -1112,12 +1399,12 @@ $('btn-pdf').addEventListener('click', async () => {
   try{
     await iconPngs(); await ijsLabel(); await Promise.all(gekozen().map(g => kleurplaatPng(g.id)));
     const pdf = bouwPdf();
-    if (!window.claude?.use){ pdf.save('schooltuinkalender.pdf'); st.textContent = 'PDF opgeslagen.'; return; }
+    if (!window.claude?.use){ pdf.save(`schooltuinkalender-${weergave}.pdf`); st.textContent = 'PDF opgeslagen.'; return; }
     const blob = pdf.output('blob');
     const dl = await window.claude.use('downloads');
     if (!dl){ st.textContent = 'Opslaan van bestanden kan niet in deze weergave. Open de pagina in claude.ai.'; return; }
     st.textContent = 'Bevestig het opslaan in het venster.';
-    await dl.save({filename:'schooltuinkalender.pdf', data: blob});
+    await dl.save({filename:`schooltuinkalender-${weergave}.pdf`, data: blob});
     st.textContent = 'PDF opgeslagen.';
   }catch(e){
     const c = e && e.code;
@@ -1127,6 +1414,14 @@ $('btn-pdf').addEventListener('click', async () => {
   }finally{ knop.disabled = keuze.size === 0; }
 });
 
+$('tabs').addEventListener('click', e => { const t = e.target.closest('.tab'); if (t) kiesWeergave(t.dataset.w); });
+$('tabs').addEventListener('keydown', e => {
+  const ks = Object.keys(WEERGAVEN), i = ks.indexOf(weergave);
+  const n = e.key === 'ArrowRight' ? i+1 : e.key === 'ArrowLeft' ? i-1 : e.key === 'Home' ? 0 : e.key === 'End' ? ks.length-1 : null;
+  if (n === null) return; e.preventDefault(); kiesWeergave(ks[(n + ks.length) % ks.length], true);
+});
+
+tekenTabs(); tekenLegenda(); $('hint').textContent = WEERGAVEN[weergave].hint;
 tekenPlan(); tekenKeuze(); tekenKalender(); tekenMaand(); tekenTabel();
 </script>
 </body>
