@@ -135,11 +135,12 @@ th{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
 td:first-child{font-weight:700}
 tbody tr:last-child td{border-bottom:0}
 
-.pdfbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:20px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.head-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-left:auto}
+.sec-head + .legend{margin:-4px 0 14px}
 .primary{padding:10px 18px;border-radius:999px;border:0;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:15px;cursor:pointer}
 .primary:disabled{opacity:.5;cursor:default}
-.pdfbar p{margin:0;flex:1 1 280px;min-width:0;font-size:14px;color:var(--muted)}
-#pdf-status{font-size:14px;font-weight:700;color:var(--ink)}
+#pdf-status{font-size:14px;font-weight:700;color:var(--ink);text-align:right}
+#pdf-status:empty{display:none}
 .plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}
 .plancard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}
 .plancard h3{margin:0 0 2px;font-weight:800;font-size:20px}
@@ -185,16 +186,15 @@ td .vn .ico{width:26px;height:26px}
 </header>
 
 <main class="wrap">
-    <div class="pdfbar">
-      <button type="button" class="primary" id="btn-pdf">PDF maken</button>
-      <p>De PDF bevat het jaaroverzicht, een pagina per gekozen gewas met alle taken per maand, en een pagina per maand met wat er moet gebeuren.</p>
-      <span id="pdf-status" role="status"></span>
-    </div>
   <section aria-labelledby="jaar-titel">
     <div class="sec-head">
       <h2 id="jaar-titel">Jaaroverzicht</h2>
-      <ul class="legend" id="legenda"></ul>
+      <div class="head-actions">
+        <span id="pdf-status" role="status"></span>
+        <button type="button" class="primary" id="btn-pdf">PDF maken</button>
+      </div>
     </div>
+    <ul class="legend" id="legenda"></ul>
     <div class="chart-scroll">
       <div class="chart" id="chart"></div>
     </div>
